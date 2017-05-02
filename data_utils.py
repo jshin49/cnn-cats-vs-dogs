@@ -51,6 +51,19 @@ def get_next_batch(batches):
     return next
 
 
+def load_data():
+    print("\nLoading existing training data")
+    train_data = np.load('train_data.npy')
+    print("Loading existing validation data")
+    validation_data = np.load('validation_data.npy')
+    print("Loading existing test data")
+    test_data = np.load('test_data.npy')
+    print("Shuffling and Re-splitting into train/validation data set")
+    train_data, validation_data = \
+        split_dataset(train_data, validation_data, config.split_rate)
+    return train_data, validation_data, test_data
+
+
 if __name__ == '__main__':
 
     import image_utils as iu

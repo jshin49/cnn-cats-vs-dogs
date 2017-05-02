@@ -7,7 +7,7 @@ from tqdm import tqdm	   # percentage bar for tasks
 
 from model import Model
 from config import Config
-from data_utils import process_data, generate_train_batches, get_next_batch
+from data_utils import load_data, generate_train_batches, get_next_batch
 
 # 0=Test, 1=Train
 K.set_learning_phase(1)
@@ -25,7 +25,7 @@ model = Model(config, sess, graph)
 model.restore()
 
 # Generate data and batches for each epoch
-train_data, validation_data, test_data = process_data()
+train_data, validation_data, test_data = load_data()
 total_batch_size = int(config.train_size / config.batch_size)
 for epoch in tqdm(range(config.epochs)):
     avg_loss = 0
