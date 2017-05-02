@@ -32,28 +32,28 @@ class Model(object):
         conv1 = Conv2D(32, (3, 3), padding='same', input_shape=(self.config.image_size,
                                                                 self.config.image_size,
                                                                 self.config.channels), activation='relu')(images)
-        # conv1 = Conv2D(32, (3, 3), padding='same', activation='relu')(conv1)
+        conv1 = Conv2D(32, (3, 3), padding='same', activation='relu')(conv1)
         conv1 = MaxPooling2D(pool_size=(2, 2))(conv1)
 
         conv2 = Conv2D(64, (3, 3), padding='same', activation='relu')(conv1)
-        # conv2 = Conv2D(64, (3, 3), padding='same', activation='relu')(conv2)
+        conv2 = Conv2D(64, (3, 3), padding='same', activation='relu')(conv2)
         conv2 = MaxPooling2D(pool_size=(2, 2))(conv2)
 
         conv3 = Conv2D(128, (3, 3), padding='same', activation='relu')(conv2)
-        # conv3 = Conv2D(128, (3, 3), padding='same', activation='relu')(conv3)
+        conv3 = Conv2D(128, (3, 3), padding='same', activation='relu')(conv3)
         conv3 = MaxPooling2D(pool_size=(2, 2))(conv3)
 
         conv4 = Conv2D(256, (3, 3), padding='same', activation='relu')(conv3)
-        # conv4 = Conv2D(256, (3, 3), padding='same', activation='relu')(conv4)
+        conv4 = Conv2D(256, (3, 3), padding='same', activation='relu')(conv4)
         conv4 = MaxPooling2D(pool_size=(2, 2))(conv4)
 
         features = Flatten()(conv4)
 
         fc1 = Dense(256, activation='relu')(features)
         fc1 = Dropout(self.config.dropout)(fc1)
-        # fc2 = Dense(256, activation='relu')(fc1)
-        # fc2 = Dropout(self.config.dropout)(fc2)
-        out = Dense(2, activation='softmax')(fc1)
+        fc2 = Dense(256, activation='relu')(fc1)
+        fc2 = Dropout(self.config.dropout)(fc2)
+        out = Dense(2, activation='softmax')(fc2)
 
         return out
 
