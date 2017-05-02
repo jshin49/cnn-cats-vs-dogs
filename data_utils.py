@@ -60,19 +60,14 @@ def create_train_data():
 def split_dataset(train_data, validation_data, split_rate):
     if validation_data is not None:
         data = np.concatenate([train_data, validation_data])
-        np.random.shuffle(data)
     else:
         data = train_data
 
+    np.random.shuffle(data)
     print(data.shape)
+    train_data = data[:-5000]
+    validation_data = data[-5000:]
 
-    mid = 12500
-    start = int(mid - mid * split_rate)
-    end = int(mid + mid * split_rate)
-    data = np.split(data, [start, end])
-
-    train_data = np.concatenate([data[0], data[2]])
-    validation_data = data[1]
     print(train_data.shape)
     print(validation_data.shape)
 
@@ -103,9 +98,9 @@ def process_data():
         print("Loading existing validation data")
         validation_data = np.load('validation_data.npy')
 
-        # print("Shuffling and Re-splitting into train/validation data set")
-        # train_data, validation_data = \
-        #     split_dataset(train_data, validation_data, config.split_rate)
+        print("Shuffling and Re-splitting into train/validation data set")
+        train_data, validation_data = \
+            split_dataset(train_data, validation_data, config.split_rate)
     else:
         print("Creating training data")
         train_data = create_train_data()
