@@ -1,5 +1,4 @@
 tensorflow-gpu
 numpy
 tqdm
-tflearn
 keras

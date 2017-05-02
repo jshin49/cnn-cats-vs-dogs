@@ -14,7 +14,10 @@ K.set_learning_phase(1)
 
 # Initialize model
 graph = tf.Graph()
-sess = tf.Session()
+config = tf.ConfigProto(allow_soft_placement=True, log_device_placement=True)
+config.gpu_options.allow_growth = True
+sess = tf.Session(config=config)
+
 config = Config()
 model = Model(config, sess, graph)
 

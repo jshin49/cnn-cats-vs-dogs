@@ -59,36 +59,36 @@ class Model(object):
 
     # build the graph
     def build_graph(self):
-        tf.reset_default_graph()
-        with self.graph.as_default():
-            with self.sess:
-                # Input images
-                self.images = tf.placeholder(shape=[None,
-                                                    self.config.image_size,
-                                                    self.config.image_size,
-                                                    self.config.channels],
-                                             dtype=tf.float32,
-                                             name='Images')
+        with tf.device('/gpu:0'):
+            with self.graph.as_default():
+                with self.sess:
+                    # Input images
+                    self.images = tf.placeholder(shape=[None,
+                                                        self.config.image_size,
+                                                        self.config.image_size,
+                                                        self.config.channels],
+                                                 dtype=tf.float32,
+                                                 name='Images')
 
-                # Input labels that represent the real outputs
-                self.labels = tf.placeholder(shape=[None, 2],
-                                             dtype=tf.float32,
-                                             name='Labels')
+                    # Input labels that represent the real outputs
+                    self.labels = tf.placeholder(shape=[None, 2],
+                                                 dtype=tf.float32,
+                                                 name='Labels')
 
-                self.model = self.init_model(self.images)
-                self.loss = tf.reduce_mean(
-                    categorical_crossentropy(self.labels, self.model))
+                    self.model = self.init_model(self.images)
+                    self.loss = tf.reduce_mean(
+                        categorical_crossentropy(self.labels, self.model))
 
-                self.optimizer = tf.train.RMSPropOptimizer(
-                    learning_rate=self.learning_rate).minimize(self.loss)
-                correct_prediction = tf.equal(
-                    tf.argmax(self.labels, 1), tf.argmax(self.model, 1))
+                    self.optimizer = tf.train.RMSPropOptimizer(
+                        learning_rate=self.learning_rate).minimize(self.loss)
+                    correct_prediction = tf.equal(
+                        tf.argmax(self.labels, 1), tf.argmax(self.model, 1))
 
-                self.accuracy = tf.reduce_mean(
-                    tf.cast(correct_prediction, tf.float32))
+                    self.accuracy = tf.reduce_mean(
+                        tf.cast(correct_prediction, tf.float32))
 
-                self.init = tf.global_variables_initializer()
-                self.saver = tf.train.Saver(tf.trainable_variables())
+                    self.init = tf.global_variables_initializer()
+                    self.saver = tf.train.Saver(tf.trainable_variables())
 
     def predict(self, batch_images, batch_labels):
         K.set_learning_phase(0)
