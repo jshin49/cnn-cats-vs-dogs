@@ -114,7 +114,14 @@ class Model(object):
         return loss
 
     def test_batch(self, batch_images):
-        pass
+        # K.set_learning_phase(1)
+        self.sess.run(self.init)
+        feed_dict = {
+            self.images: batch_images
+        }
+        pred = self.sess.run(
+            [self.model], feed_dict=feed_dict)
+        return pred
 
     def eval_batch(self):
         pass
