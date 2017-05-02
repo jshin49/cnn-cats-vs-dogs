@@ -103,9 +103,9 @@ def process_data():
         print("Loading existing validation data")
         validation_data = np.load('validation_data.npy')
 
-        print("Shuffling and Re-splitting into train/validation data set")
-        train_data, validation_data = \
-            split_dataset(train_data, validation_data, config.split_rate)
+        # print("Shuffling and Re-splitting into train/validation data set")
+        # train_data, validation_data = \
+        #     split_dataset(train_data, validation_data, config.split_rate)
     else:
         print("Creating training data")
         train_data = create_train_data()
