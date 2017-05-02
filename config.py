@@ -15,12 +15,12 @@ class Config(object):
     # Data Processing
     train_dir = './data/train'
     test_dir = './data/test'
-    image_size = 150    # resize image to 150*150
+    image_size = 150    # resize image to image_size*image_size
     channels = 3        # Channel Size
     split_rate = 0.2 	# Validation Data portion
     valid_size = int(25000 * split_rate)
     train_size = 25000 - valid_size
 
     # Saver
-    model_name = 'dogsvscats-{}LR-{}CONV-{}FC'.format(lr, 3, 2)
+    model_name = 'full-{}lr-{}img'.format(lr, image_size)
     ckpt_path = 'ckpt/' + model_name

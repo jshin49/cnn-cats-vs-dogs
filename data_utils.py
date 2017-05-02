@@ -89,6 +89,7 @@ def process_test_data():
         img_num = img.split('.')[0]
         img = cv2.imread(path, cv2.IMREAD_COLOR)
         img = cv2.resize(img, (IMG_SIZE, IMG_SIZE))
+        # img = img.transpose((2, 0, 1))
         test_data.append([np.array(img), img_num])
 
     np.save('test_data.npy', test_data)
@@ -143,21 +144,22 @@ if __name__ == '__main__':
     batches = generate_train_batches(train_data, config.batch_size)
     next = get_next_batch(batches)
     print(len(batches))
-    fig = plt.figure()
+    print(batches[0][0][0].shape)
+    # fig = plt.figure()
 
-    np.random.shuffle(train_data)
-    index = 1
-    for data in train_data[:12]:
-        print(data[1])
-        y = fig.add_subplot(3, 4, index)
-        if data[1][0]:
-            label = "cat"
-        else:
-            label = "dog"
-        y.imshow(data[0], cmap='gray')
-        plt.title(label)
-        y.axes.get_xaxis().set_visible(False)
-        y.axes.get_yaxis().set_visible(False)
-        index += 1
+    # np.random.shuffle(train_data)
+    # index = 1
+    # for data in train_data[:12]:
+    #     print(data[1])
+    #     y = fig.add_subplot(3, 4, index)
+    #     if data[1][0]:
+    #         label = "cat"
+    #     else:
+    #         label = "dog"
+    #     y.imshow(data[0], cmap='gray')
+    #     plt.title(label)
+    #     y.axes.get_xaxis().set_visible(False)
+    #     y.axes.get_yaxis().set_visible(False)
+    #     index += 1
 
-    plt.show()
+    # plt.show()
