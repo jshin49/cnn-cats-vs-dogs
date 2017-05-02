@@ -10,6 +10,7 @@ from matplotlib import ticker
 # %matplotlib inline
 
 from config import Config
+import data_utils as du
 
 config = Config()
 
@@ -80,13 +81,13 @@ def process_data():
 
         print("Shuffling and Re-splitting into train/validation data set")
         train_data, validation_data = \
-            split_dataset(train_data, validation_data, config.split_rate)
+            du.split_dataset(train_data, validation_data, config.split_rate)
     else:
         print("Creating training data")
         train_data = create_train_data()
         print("Splitting into train/validation data set")
         train_data, validation_data = \
-            split_dataset(train_data, None, config.split_rate)
+            du.split_dataset(train_data, None, config.split_rate)
 
     if os.path.exists('test_data.npy'):
         print("Loading existing test data")
