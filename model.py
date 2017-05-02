@@ -146,7 +146,18 @@ if __name__ == '__main__':
     sess = tf.Session()
     config = Config()
     model = Model(config, sess, graph)
-    train_data, validation_data, test_data = du.process_data()
+
+    if os.path.exists('train_data.npy'):
+        print("\nLoading existing training data")
+        train_data = np.load('train_data.npy')
+        print("Loading existing validation data")
+        validation_data = np.load('validation_data.npy')
+        print("Loading existing test data")
+        test_data = np.load('test_data.npy')
+        print("Shuffling and Re-splitting into train/validation data set")
+        train_data, validation_data = \
+            split_dataset(train_data, validation_data, config.split_rate)
+
     batches = du.generate_train_batches(train_data, config.batch_size)
     batch = du.get_next_batch(batches)
     batch_images, batch_labels = map(list, zip(*batch))
