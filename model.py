@@ -79,7 +79,7 @@ class Model(object):
                 self.loss = tf.reduce_mean(
                     categorical_crossentropy(self.labels, self.model))
 
-                self.optimizer = tf.train.AdamOptimizer(
+                self.optimizer = tf.train.RMSPropOptimizer(
                     learning_rate=self.learning_rate).minimize(self.loss)
                 correct_prediction = tf.equal(
                     tf.argmax(self.labels, 1), tf.argmax(self.model, 1))
