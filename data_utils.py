@@ -33,8 +33,9 @@ def split_dataset(train_data, validation_data, split_rate):
     print(train_data.shape)
     print(validation_data.shape)
 
-    np.save('train_data.npy', train_data)
-    np.save('validation_data.npy', validation_data)
+    if not os.path.exists('validation_data.npy'):
+        np.save('train_data.npy', train_data)
+        np.save('validation_data.npy', validation_data)
 
     return train_data, validation_data
 
