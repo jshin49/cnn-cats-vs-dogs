@@ -54,7 +54,7 @@ def create_train_data():
         train_data.append([np.array(img), np.array(label)])
 
     np.random.shuffle(train_data)
-    np.save('train_data.npy', train_data, fix_imports=True)
+    # np.save('train_data.npy', train_data, fix_imports=True)
     return np.array(train_data)
 
 
