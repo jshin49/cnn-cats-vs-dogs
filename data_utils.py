@@ -9,7 +9,6 @@ from matplotlib import ticker
 # %matplotlib inline
 
 from config import Config
-import image_utils as iu
 
 config = Config()
 
@@ -54,6 +53,7 @@ def get_next_batch(batches):
 
 if __name__ == '__main__':
 
+    import image_utils as iu
     train_data, validation_data, test_data = iu.process_data()
 
     batches = generate_train_batches(train_data, config.batch_size)
