@@ -1,6 +1,5 @@
 from __future__ import print_function
 
-import cv2         # working with, mainly resizing, images
 import numpy as np     # dealing with arrays
 import os              # dealing with directories
 from tqdm import tqdm	   # percentage bar for tasks
@@ -107,6 +106,7 @@ def process_data():
         # train_data, validation_data = \
         #     split_dataset(train_data, validation_data, config.split_rate)
     else:
+        import cv2         # working with, mainly resizing, images
         print("Creating training data")
         train_data = create_train_data()
         print("Splitting into train/validation data set")
@@ -118,6 +118,7 @@ def process_data():
         test_data = np.load('test_data.npy')
         print(test_data.shape)
     else:
+        import cv2         # working with, mainly resizing, images
         print("Processing test data")
         test_data = process_test_data()
         print(test_data.shape)
