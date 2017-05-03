@@ -87,7 +87,7 @@ class Model(object):
                     # self.accuracy = tf.reduce_mean(
                     #     tf.cast(correct_prediction, tf.float32))
                     self.accuracy = tf.reduce_mean(
-                        tf.cast(tf.equal(self.prediction, self.labels), tf.float32), name="accuracy")
+                        tf.cast(tf.equal(self.model, self.labels), tf.float32), name="accuracy")
 
                     self.init = tf.global_variables_initializer()
                     self.saver = tf.train.Saver(tf.trainable_variables())
