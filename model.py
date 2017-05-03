@@ -81,8 +81,9 @@ class Model(object):
 
                     self.optimizer = tf.train.RMSPropOptimizer(
                         learning_rate=self.learning_rate).minimize(self.loss)
+
                     correct_prediction = tf.equal(
-                        tf.argmax(self.model, 1), tf.argmax(self.label, 1))
+                        tf.argmax(self.model, 1), tf.argmax(self.labels, 1))
                     print(correct_prediction)
                     self.accuracy = tf.reduce_mean(
                         tf.cast(correct_prediction, tf.float32))
