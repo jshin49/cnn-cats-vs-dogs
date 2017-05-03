@@ -1,10 +1,6 @@
 import sys
 import numpy as np
 import tensorflow as tf
-from keras import backend as K
-from keras.layers import Activation, Dropout, Flatten, Dense, Conv2D, MaxPooling2D, ZeroPadding2D
-from keras.objectives import categorical_crossentropy
-from keras import initializers
 
 from config import Config
 import data_utils as du
@@ -28,52 +24,98 @@ class Model(object):
         self.build_graph()
         sys.stdout.write('</log>\n')
 
-    def init_model(self, images):
-        # CNN Model
-        conv1 = Conv2D(32, (3, 3), padding='same', input_shape=(self.config.image_size,
-                                                                self.config.image_size,
-                                                                self.config.channels),
-                       activation='relu',
-                       kernel_initializer=initializers.random_normal(stddev=0.05))(images)
-        conv1 = Conv2D(32, (3, 3), padding='same', activation='relu',
-                       kernel_initializer=initializers.random_normal(stddev=0.05))(conv1)
-        conv1 = MaxPooling2D(pool_size=(2, 2))(conv1)
+    def init_model(self, images, training):
+        # CNN Model with tf.layers
 
-        conv2 = Conv2D(64, (3, 3), padding='same', activation='relu',
-                       kernel_initializer=initializers.random_normal(stddev=0.05))(conv1)
-        conv2 = Conv2D(64, (3, 3), padding='same', activation='relu',
-                       kernel_initializer=initializers.random_normal(stddev=0.05))(conv2)
-        conv2 = MaxPooling2D(pool_size=(2, 2))(conv2)
+        # Input Layer
+        input_layer = tf.reshape(
+            images, [-1,
+                     self.config.image_size,
+                     self.config.image_size,
+                     self.config.channels])
 
-        conv3 = Conv2D(128, (3, 3), padding='same', activation='relu',
-                       kernel_initializer=initializers.random_normal(stddev=0.05))(conv2)
-        conv3 = Conv2D(128, (3, 3), padding='same', activation='relu',
-                       kernel_initializer=initializers.random_normal(stddev=0.05))(conv3)
-        conv3 = MaxPooling2D(pool_size=(2, 2))(conv3)
+        # Convolutional Layer #1
+        conv1 = tf.layers.conv2d(
+            inputs=input_layer,
+            filters=32,
+            kernel_size=[3, 3],
+            padding="same",
+            activation=tf.nn.relu)
+        conv1 = tf.layers.conv2d(
+            inputs=conv1,
+            filters=32,
+            kernel_size=[3, 3],
+            padding="same",
+            activation=tf.nn.relu)
+        pool1 = tf.layers.max_pooling2d(
+            inputs=conv1, pool_size=[2, 2], strides=(2, 2))
 
-        conv4 = Conv2D(256, (3, 3), padding='same', activation='relu',
-                       kernel_initializer=initializers.random_normal(stddev=0.05))(conv3)
-        conv4 = Conv2D(256, (3, 3), padding='same', activation='relu',
-                       kernel_initializer=initializers.random_normal(stddev=0.05))(conv4)
-        conv4 = MaxPooling2D(pool_size=(2, 2))(conv4)
+        # Convolutional Layer #2
+        conv2 = tf.layers.conv2d(
+            inputs=pool1,
+            filters=64,
+            kernel_size=[3, 3],
+            padding="same",
+            activation=tf.nn.relu)
+        conv2 = tf.layers.conv2d(
+            inputs=conv1,
+            filters=64,
+            kernel_size=[3, 3],
+            padding="same",
+            activation=tf.nn.relu)
+        pool2 = tf.layers.max_pooling2d(
+            inputs=conv1, pool_size=[2, 2], strides=(2, 2))
 
-        features = Flatten()(conv4)
+        # Convolutional Layer #3
+        conv3 = tf.layers.conv2d(
+            inputs=pool2,
+            filters=128,
+            kernel_size=[3, 3],
+            padding="same",
+            activation=tf.nn.relu)
+        conv3 = tf.layers.conv2d(
+            inputs=conv1,
+            filters=128,
+            kernel_size=[3, 3],
+            padding="same",
+            activation=tf.nn.relu)
+        pool3 = tf.layers.max_pooling2d(
+            inputs=conv1, pool_size=[2, 2], strides=(2, 2))
 
-        fc1 = Dense(256, activation='relu',
-                    kernel_initializer=initializers.random_normal(
-                        stddev=0.05))(features)
-        fc1 = Dropout(self.config.dropout)(fc1)
-        fc2 = Dense(256, activation='relu',
-                    kernel_initializer=initializers.random_normal(
-                        stddev=0.05))(fc1)
-        fc2 = Dropout(self.config.dropout)(fc2)
-        out = Dense(2, activation='softmax')(fc2)
+        # Convolutional Layer #4
+        conv4 = tf.layers.conv2d(
+            inputs=pool3,
+            filters=256,
+            kernel_size=[3, 3],
+            padding="same",
+            activation=tf.nn.relu)
+        conv4 = tf.layers.conv2d(
+            inputs=conv1,
+            filters=256,
+            kernel_size=[3, 3],
+            padding="same",
+            activation=tf.nn.relu)
+        pool4 = tf.layers.max_pooling2d(
+            inputs=conv1, pool_size=[2, 2], strides=(2, 2))
 
-        return out
+        # Dense Layer
+        flatten = tf.reshape(pool4, [-1, 32 * 32 * 32])
+        fc1 = tf.layers.dense(
+            inputs=flatten, units=256, activation=tf.nn.relu)
+        fc1 = tf.layers.dropout(
+            inputs=fc1, rate=self.config.dropout, training=training)
+        fc2 = tf.layers.dense(
+            inputs=fc1, units=256, activation=tf.nn.relu)
+        fc2 = tf.layers.dropout(
+            inputs=fc2, rate=self.config.dropout, training=training)
+
+        logits = tf.layers.dense(inputs=fc2, units=2)
+
+        return logits
 
     # build the graph
     def build_graph(self):
-        with tf.device('/gpu:0'):
+        with tf.device('/cpu:0'):
             with self.graph.as_default():
                 with self.sess:
                     # Input images
@@ -89,9 +131,12 @@ class Model(object):
                                                  dtype=tf.float32,
                                                  name='Labels')
 
-                    self.model = self.init_model(self.images)
-                    self.loss = tf.reduce_mean(
-                        categorical_crossentropy(self.labels, self.model))
+                    # Is Training?
+                    self.training = tf.placeholder(dtype=tf.bool)
+
+                    self.model = self.init_model(self.images, self.training)
+                    self.loss = tf.losses.softmax_cross_entropy(
+                        onehot_labels=self.labels, logits=self.model)
 
                     self.optimizer = tf.train.RMSPropOptimizer(
                         learning_rate=self.learning_rate).minimize(self.loss)
@@ -105,49 +150,46 @@ class Model(object):
                     self.saver = tf.train.Saver(tf.trainable_variables())
 
     def predict(self, batch_images, batch_labels):
-        K.set_learning_phase(0)
         self.sess.run(self.init)
         feed_dict = {
             self.images: batch_images,
-            self.labels: batch_labels
+            self.labels: batch_labels,
+            self.training: False
         }
         pred, loss, acc = self.sess.run(
             [self.model, self.loss, self.accuracy], feed_dict=feed_dict)
-        K.set_learning_phase(1)
         return pred, loss, acc
 
     def train_eval_batch(self, batch_images, batch_labels):
-        # K.set_learning_phase(1)
         self.sess.run(self.init)
         feed_dict = {
             self.images: batch_images,
-            self.labels: batch_labels
+            self.labels: batch_labels,
+            self.training: True
         }
         loss, acc, _ = self.sess.run(
             [self.loss, self.accuracy, self.optimizer], feed_dict=feed_dict)
         return loss, acc
 
     def eval_batch(self, batch_images, batch_labels):
-        K.set_learning_phase(0)
         self.sess.run(self.init)
         feed_dict = {
             self.images: batch_images,
-            self.labels: batch_labels
+            self.labels: batch_labels,
+            self.training: False
         }
         loss, acc = self.sess.run(
             [self.loss, self.accuracy], feed_dict=feed_dict)
-        K.set_learning_phase(1)
         return loss, acc
 
     def test_batch(self, batch_images):
-        K.set_learning_phase(0)
         self.sess.run(self.init)
         feed_dict = {
-            self.images: batch_images
+            self.images: batch_images,
+            self.training: False
         }
         pred = self.sess.run(
             [self.model], feed_dict=feed_dict)
-        K.set_learning_phase(1)
         return pred
 
     def save(self, step):
@@ -162,15 +204,12 @@ class Model(object):
             self.saver.restore(self.sess, ckpt.model_checkpoint_path)
 
 if __name__ == '__main__':
-    K.set_learning_phase(1)
-    # K.set_image_dim_ordering('th')
-
     graph = tf.Graph()
     sess_config = tf.ConfigProto(
         allow_soft_placement=True, log_device_placement=True)
     sess_config.gpu_options.allow_growth = True
     sess = tf.Session(config=sess_config)
-
+    # sess = tf.Session()
     config = Config()
     model = Model(config, sess, graph)
 
@@ -182,5 +221,6 @@ if __name__ == '__main__':
     batch_labels = np.array(batch_labels)
     batch_images = batch_images.reshape(-1, config.image_size, config.image_size,
                                         config.channels)
-    pred, loss = model.predict(batch_images, batch_labels)
+    pred, loss, acc = model.predict(batch_images, batch_labels)
     print(loss)
+    print(pred.shape)

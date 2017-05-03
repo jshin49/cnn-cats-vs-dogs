@@ -2,16 +2,11 @@ from __future__ import print_function
 
 import numpy as np
 import tensorflow as tf
-from keras import backend as K
 from tqdm import tqdm	   # percentage bar for tasks
 
 from model import Model
 from config import Config
 from data_utils import load_data, generate_train_batches, get_next_batch
-
-# 0=Test, 1=Train
-K.set_learning_phase(0)
-# K.set_image_dim_ordering('th')
 
 # Initialize model
 graph = tf.Graph()
