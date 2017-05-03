@@ -152,9 +152,9 @@ class Model(object):
 
     # build the graph
     def build_graph(self):
-        with tf.device('/gpu:0'):
-            with self.graph.as_default():
-                with self.sess:
+        with self.graph.as_default():
+            with self.sess:
+                with tf.device('/gpu:0'):
                     # Input images
                     self.images = tf.placeholder(shape=[None,
                                                         self.config.image_size,
@@ -191,6 +191,8 @@ class Model(object):
                     self.summary = tf.summary.merge_all()
 
                     self.init = tf.global_variables_initializer()
+
+                with tf.device('/cpu:0'):
                     self.saver = tf.train.Saver(tf.trainable_variables())
 
     def generate_feed_dict(self, batch_images, batch_labels=None, training=False):
