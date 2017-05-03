@@ -14,14 +14,12 @@ from data_utils import load_data, generate_train_batches, get_next_batch
 
 
 def train(train_data, total_batch_size, validation_data=None, val_batch_size=None):
+    train_writer = tf.summary.FileWriter(model.logs_path, graph=model.graph)
+
     for epoch in tqdm(range(config.epochs)):
         avg_loss = 0
         avg_acc = 0
         train_batches = generate_train_batches(train_data, config.batch_size)
-        # avg_val_loss = 0
-        # avg_val_acc = 0
-        # val_batches = generate_train_batches(
-        #     validation_data, config.batch_size)
 
         for step in tqdm(range(total_batch_size)):
             train_batch = get_next_batch(train_batches)
@@ -32,24 +30,12 @@ def train(train_data, total_batch_size, validation_data=None, val_batch_size=Non
                                                                       config.image_size, config.channels)
             train_batch_labels = np.array(train_batch_labels).reshape(-1, 1)
 
-            loss, acc = model.train_eval_batch(
+            summary, loss, acc = model.train_eval_batch(
                 train_batch_images, train_batch_labels, False)
             avg_loss += (loss / total_batch_size)
             avg_acc += (acc / total_batch_size)
-
-            # validation_check = total_batch_size / val_batch_size
-            # if step % validation_check == 0 and (val_batch_size * validation_check) <= step:
-            #     val_batch = get_next_batch(val_batches)
-            #     val_batch_images, val_batch_labels = map(list, zip(*val_batch))
-            #     val_batch_images = np.array(val_batch_images)
-            #     val_batch_labels = np.array(val_batch_labels)
-            #     val_batch_images = val_batch_images.reshape(-1, config.image_size,
-            # config.image_size, config.channels)
-
-            #     val_loss, val_acc = model.eval_batch(
-            #         val_batch_images, val_batch_labels)
-            #     avg_val_loss += val_loss  # (val_loss / val_batch_size)
-            #     avg_val_acc += val_acc  # (val_acc / val_batch_size)
+            train_writer.add_summary(
+                summary, (epoch + 1) * total_batch_size + step)
 
         print('\nEpoch: %d, Avg Loss: %f, Train Acc: %f' %
               (epoch + 1, avg_loss, avg_acc))
@@ -62,14 +48,13 @@ def train(train_data, total_batch_size, validation_data=None, val_batch_size=Non
         val_loss, val_acc = model.eval_batch(val_images, val_labels)
         print('\nEpoch: %d, Validation Loss: %f, Validation Acc: %f' %
               (epoch + 1, val_loss, val_acc))
-        # print('\nEpoch: %d, Avg. Loss: %f, Val Loss: %f' %
-        #       (epoch, avg_loss / total_batch_size, avg_val_loss / (val_batch_size * validation_check)))
-        # print('\nEpoch: %d, Train Acc: %f, Val Acc: %f' %
-        #       (epoch, avg_acc / total_batch_size, avg_val_acc / (val_batch_size * validation_check)))
+
         print('saving checkpoint')
         model.save((epoch + 1) * total_batch_size)
 
     print('Training Completed')
+    train_writer.close()
+
 
 # Initialize model
 graph = tf.Graph()
@@ -114,5 +99,5 @@ batch_sizes = [32]
 
 total_batch_size = int(config.train_size / config.batch_size)
 # val_batch_size = int(config.valid_size / config.batch_size)
-model.restore()
+# model.restore()
 train(train_data, total_batch_size, random.sample(validation_data, 500))

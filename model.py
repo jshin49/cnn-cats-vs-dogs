@@ -12,8 +12,7 @@ class Model(object):
         print("Init Model object")
         self.graph = graph
         self.sess = session
-        # K.set_session(self.sess)
-
+        self.logs_path = '/tmp/tensorboard/'
         self.config = config
         self.learning_rate = self.config.lr
         self.batch_size = self.config.batch_size
@@ -179,9 +178,12 @@ class Model(object):
                     #     onehot_labels=self.labels, logits=self.model)
                     self.loss = tf.losses.log_loss(
                         labels=self.labels, predictions=self.model)
-
                     self.optimizer = tf.train.AdamOptimizer(
                         learning_rate=self.learning_rate).minimize(self.loss)
+
+                    # TensorBoard Summary
+                    tf.summary.scalar("log_loss", self.loss)
+                    self.summary = tf.summary.merge_all()
 
                     self.init = tf.global_variables_initializer()
                     self.saver = tf.train.Saver(tf.trainable_variables())
@@ -214,10 +216,12 @@ class Model(object):
         self.sess.run(self.init)
         feed_dict = self.generate_feed_dict(
             batch_images, batch_labels, training)
-        pred, loss, _ = self.sess.run(
-            [self.model, self.loss, self.optimizer], feed_dict=feed_dict)
+        summary, pred, loss, _ = self.sess.run(
+            [self.summary, self.model, self.loss, self.optimizer], feed_dict=feed_dict)
         accuracy = self.calculate_accuracy(pred, batch_labels)
-        return loss, accuracy
+        tf.summary.scalar("accuracy", accuracy)
+
+        return summary, loss, accuracy
 
     def eval_batch(self, batch_images, batch_labels, training=False):
         self.sess.run(self.init)
