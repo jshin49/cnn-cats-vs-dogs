@@ -75,25 +75,25 @@ train_data, validation_data, test_data = load_data()
 
 # Hyperparameter Tuning (Choose Best)
 l2s = [0.01]
-lrs = [0.1, 0.01, 0.001]
-# lrs = [0.005, 0.001, 0.0005, 0.0001]
+# lrs = [0.1, 0.01, 0.001]
+lrs = [0.01, 0.005, 0.001, 0.0005, 0.0001]
 dropouts = [0.5, 0.75, 1.0]
-batch_sizes = [32, 64, 128]
-for l2 in l2s:
-    config.l2 = l2
-    for dropout in dropouts:
-        config.dropout = dropout
-        for batch_size in batch_sizes:
-            config.batch_size = batch_size
-            total_batch_size = int(config.train_size / config.batch_size)
-            val_batch_size = int(config.valid_size / config.batch_size)
-            for lr in lrs:
-                config.lr = lr
-                model.restore()
-                print('L2: %f, Dropout: %f, Batch Size: %d, Learning Rate: %f \n' %
-                      (config.l2, config.dropout, config.batch_size, config.lr))
-                train(train_data, validation_data,
-                      total_batch_size, val_batch_size)
+batch_sizes = [16, 32, 64, 128]
+# for l2 in l2s:
+#     config.l2 = l2
+#     for dropout in dropouts:
+#         config.dropout = dropout
+#         for batch_size in batch_sizes:
+#             config.batch_size = batch_size
+#             total_batch_size = int(config.train_size / config.batch_size)
+#             val_batch_size = int(config.valid_size / config.batch_size)
+#             for lr in lrs:
+#                 config.lr = lr
+#                 model.restore()
+#                 print('L2: %f, Dropout: %f, Batch Size: %d, Learning Rate: %f \n' %
+#                       (config.l2, config.dropout, config.batch_size, config.lr))
+#                 train(train_data, validation_data,
+#                       total_batch_size, val_batch_size)
 
-# model.restore()
-# train(train_data, validation_data, total_batch_size, val_batch_size)
+model.restore()
+train(train_data, validation_data, total_batch_size, val_batch_size)

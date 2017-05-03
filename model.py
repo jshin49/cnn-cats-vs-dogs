@@ -118,10 +118,10 @@ class Model(object):
         # return pool4
 
         # Dense Layer
-        # Flatten for 64*64 : 32,32,32
-        # Flatten for 150*150 : 75,75,32
-        # Flatten for 224*224 : 112,112,32
-        flatten = tf.reshape(pool4, [-1, 32 * 32 * 32])
+        # Flatten for 64*64 : 4,4,256
+        # Flatten for 150*150 : 9,9,256
+        # Flatten for 224*224 : 14,14,256
+        flatten = tf.reshape(pool4, [-1, 4 * 4 * 256])
         fc1 = tf.layers.dense(
             inputs=flatten,
             units=256,
@@ -170,6 +170,7 @@ class Model(object):
 
                     self.model = self.init_model(self.images, self.training)
                     # self.loss = tf.constant(1)
+                    # self.accuracy = tf.constant(1)
                     self.loss = tf.losses.softmax_cross_entropy(
                         onehot_labels=self.labels, logits=self.model)
 
@@ -193,9 +194,6 @@ class Model(object):
         }
         pred, loss, acc = self.sess.run(
             [self.model, self.loss, self.accuracy], feed_dict=feed_dict)
-        # pred, loss = self.sess.run(
-        #     [self.model, self.loss], feed_dict=feed_dict)
-        # return pred, loss
         return pred, loss, acc
 
     def train_eval_batch(self, batch_images, batch_labels):
@@ -261,6 +259,6 @@ if __name__ == '__main__':
                                         config.image_size, config.channels)
     pred, loss, acc = model.predict(batch_images, batch_labels)
     # zeros = np.zeros((16, 224, 224, 3), dtype=np.int)
-    # pred, loss = model.predict(zeros, batch_labels)
+    # pred, loss, acc = model.predict(zeros, batch_labels)
     print(loss)
     print(pred.shape)
