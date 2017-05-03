@@ -143,9 +143,10 @@ class Model(object):
 if __name__ == '__main__':
     K.set_learning_phase(1)
     graph = tf.Graph()
-    sess = tf.Session()
-    config = Config()
-    model = Model(config, sess, graph)
+    sess_config = tf.ConfigProto(
+        allow_soft_placement=True, log_device_placement=True)
+    sess_config.gpu_options.allow_growth = True
+    sess = tf.Session(config=sess_config)
 
     train_data, validation_data, test_data = du.load_data()
     batches = du.generate_train_batches(train_data, config.batch_size)
