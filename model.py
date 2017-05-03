@@ -66,7 +66,7 @@ class Model(object):
             kernel_regularizer=regularizer,
             activation=tf.nn.relu)
         conv2 = tf.layers.conv2d(
-            inputs=conv1,
+            inputs=conv2,
             filters=64,
             kernel_size=[3, 3],
             padding="same",
@@ -74,7 +74,7 @@ class Model(object):
             kernel_regularizer=regularizer,
             activation=tf.nn.relu)
         pool2 = tf.layers.max_pooling2d(
-            inputs=conv1, pool_size=[2, 2], strides=(2, 2))
+            inputs=conv2, pool_size=[2, 2], strides=(2, 2))
 
         # Convolutional Layer #3
         conv3 = tf.layers.conv2d(
@@ -86,7 +86,7 @@ class Model(object):
             kernel_regularizer=regularizer,
             activation=tf.nn.relu)
         conv3 = tf.layers.conv2d(
-            inputs=conv1,
+            inputs=conv3,
             filters=128,
             kernel_size=[3, 3],
             padding="same",
@@ -94,7 +94,7 @@ class Model(object):
             kernel_regularizer=regularizer,
             activation=tf.nn.relu)
         pool3 = tf.layers.max_pooling2d(
-            inputs=conv1, pool_size=[2, 2], strides=(2, 2))
+            inputs=conv3, pool_size=[2, 2], strides=(2, 2))
 
         # Convolutional Layer #4
         conv4 = tf.layers.conv2d(
@@ -106,7 +106,7 @@ class Model(object):
             kernel_regularizer=regularizer,
             activation=tf.nn.relu)
         conv4 = tf.layers.conv2d(
-            inputs=conv1,
+            inputs=conv4,
             filters=256,
             kernel_size=[3, 3],
             padding="same",
@@ -114,7 +114,7 @@ class Model(object):
             kernel_regularizer=regularizer,
             activation=tf.nn.relu)
         pool4 = tf.layers.max_pooling2d(
-            inputs=conv1, pool_size=[2, 2], strides=(2, 2))
+            inputs=conv4, pool_size=[2, 2], strides=(2, 2))
         # return pool4
 
         # Dense Layer
