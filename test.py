@@ -14,8 +14,9 @@ K.set_learning_phase(0)
 
 # Initialize model
 graph = tf.Graph()
+gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.9)
 sess_config = tf.ConfigProto(
-    allow_soft_placement=True, log_device_placement=True)
+    allow_soft_placement=True, log_device_placement=True, gpu_options=gpu_options)
 sess_config.gpu_options.allow_growth = True
 sess = tf.Session(config=sess_config)
 
