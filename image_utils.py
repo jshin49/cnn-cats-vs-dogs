@@ -29,10 +29,13 @@ def label_img(img):
     label = img.split('.')[-3]
 
     # conversion to one-hot array [cat,dog]
+    # conversion to one label 0: not dog, 1: dog
     if label == 'cat':
-        return [1, 0]
+        # return [1, 0]
+        return 0
     elif label == 'dog':
-        return [0, 1]
+        # return [0, 1]
+        return 1
 
 
 def create_train_data():
@@ -51,14 +54,14 @@ def create_train_data():
         # img = img.transpose((2, 0, 1))
         # img = np.expand_dims(img, axis=0)
 
-        train_data.append([np.array(img), np.array(label)])
+        train_data.append([np.array(img), label])
 
     np.random.shuffle(train_data)
     # np.save('train_data.npy', train_data, fix_imports=True)
     return np.array(train_data)
 
 
-def process_test_data():
+def process_test_data(size=IMG_SIZE):
     test_data = []
     for img in tqdm(os.listdir(TEST_DIR)):
         path = os.path.join(TEST_DIR, img)
@@ -69,34 +72,34 @@ def process_test_data():
         # img = img.transpose((2, 0, 1))
         test_data.append([np.array(img), img_num])
 
-    np.save('test_data.npy', test_data)
+    np.save('test_data' + str(size) + '.npy', test_data)
     return np.array(test_data)
 
 
-def process_data():
-    if os.path.exists('train_data.npy') and os.path.exists('validation_data.npy'):
+def process_data(size):
+    if os.path.exists('train_data' + str(size) + '.npy') and os.path.exists('validation_data' + str(IMG_SIZE) + '.npy'):
         print("\nLoading existing training data")
-        train_data = np.load('train_data.npy')
+        train_data = np.load('train_data' + str(size) + '.npy')
         print("Loading existing validation data")
-        validation_data = np.load('validation_data.npy')
+        validation_data = np.load('validation_data' + str(size) + '.npy')
 
         print("Shuffling and Re-splitting into train/validation data set")
         train_data, validation_data = \
-            du.split_dataset(train_data, validation_data, config.split_rate)
+            du.split_dataset(train_data, validation_data)
     else:
         print("Creating training data")
         train_data = create_train_data()
         print("Splitting into train/validation data set")
         train_data, validation_data = \
-            du.split_dataset(train_data, None, config.split_rate)
+            du.split_dataset(train_data, None)
 
-    if os.path.exists('test_data.npy'):
+    if os.path.exists('test_data' + str(size) + '.npy'):
         print("Loading existing test data")
-        test_data = np.load('test_data.npy')
+        test_data = np.load('test_data' + str(size) + '.npy')
         print(test_data.shape)
     else:
         print("Processing test data")
-        test_data = process_test_data()
+        test_data = process_test_data(size)
         print(test_data.shape)
 
     return train_data, validation_data, test_data

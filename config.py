@@ -7,8 +7,8 @@ class Config(object):
     instantiation.
     """
     # Hyperparameters
-    lr = 0.01  		# Learning Rate
-    l2 = 0.01          # L2 Loss Coefficient
+    lr = 0.001  		# Learning Rate
+    l2 = 0.001          # L2 Loss Coefficient
     dropout = 0.75  	# Dropout Rate
     batch_size = 32		# SGD Batch Size
     epochs = 50			# Number of Training Epochs
@@ -18,8 +18,7 @@ class Config(object):
     test_dir = './data/test'
     image_size = 64     # resize image to image_size*image_size
     channels = 3        # Channel Size
-    split_rate = 0.2 	# Validation Data portion
-    valid_size = int(25000 * split_rate)
+    valid_size = 1000
     train_size = 25000 - valid_size
 
     # Saver

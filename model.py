@@ -119,9 +119,11 @@ class Model(object):
 
         # Dense Layer
         # Flatten for 64*64 : 4,4,256
-        # Flatten for 150*150 : 9,9,256
-        # Flatten for 224*224 : 14,14,256
         flatten = tf.reshape(pool4, [-1, 4 * 4 * 256])
+        # Flatten for 150*150 : 9,9,256
+        # flatten = tf.reshape(pool4, [-1, 9 * 9 * 256])
+        # Flatten for 224*224 : 14,14,256
+        # flatten = tf.reshape(pool4, [-1, 14 * 14 * 256])
         fc1 = tf.layers.dense(
             inputs=flatten,
             units=256,
@@ -143,7 +145,8 @@ class Model(object):
             rate=self.config.dropout,
             training=training)
 
-        logits = tf.layers.dense(inputs=fc2, units=2)
+        # One output: Confidence score of being a dog
+        logits = tf.layers.dense(inputs=fc2, units=1, activation=tf.nn.sigmoid)
 
         return logits
 
@@ -161,7 +164,7 @@ class Model(object):
                                                  name='Images')
 
                     # Input labels that represent the real outputs
-                    self.labels = tf.placeholder(shape=[None, 2],
+                    self.labels = tf.placeholder(shape=[None, 1],
                                                  dtype=tf.float32,
                                                  name='Labels')
 
@@ -171,8 +174,10 @@ class Model(object):
                     self.model = self.init_model(self.images, self.training)
                     # self.loss = tf.constant(1)
                     # self.accuracy = tf.constant(1)
-                    self.loss = tf.losses.softmax_cross_entropy(
-                        onehot_labels=self.labels, logits=self.model)
+                    # self.loss = tf.losses.softmax_cross_entropy(
+                    #     onehot_labels=self.labels, logits=self.model)
+                    self.loss = tf.losses.sigmoid_cross_entropy(
+                        multi_class_labels=self.labels, logits=self.model)
 
                     self.optimizer = tf.train.AdamOptimizer(
                         learning_rate=self.learning_rate).minimize(self.loss)
