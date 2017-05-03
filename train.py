@@ -87,7 +87,7 @@ lrs = [0.001]
 # lrs = [0.01, 0.005, 0.001, 0.0005, 0.0001]
 dropouts = [1.0]
 # dropouts = [0.5, 0.75, 1.0]
-batch_sizes = [32, 64, 128]
+batch_sizes = [64]
 # batch_sizes = [16, 32, 64, 128]
 for l2 in l2s:
     config.l2 = l2
