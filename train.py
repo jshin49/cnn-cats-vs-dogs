@@ -14,6 +14,8 @@ from data_utils import load_data, generate_train_batches, get_next_batch
 
 
 def train(train_data, total_batch_size, validation_data=None, val_batch_size=None):
+    # train_writer = tf.summary.FileWriter(
+    #     model.log_path, model.sess.graph)
     for epoch in tqdm(range(config.epochs)):
         avg_loss = 0
         avg_acc = 0
@@ -47,8 +49,8 @@ def train(train_data, total_batch_size, validation_data=None, val_batch_size=Non
         print('\nEpoch: %d, Validation Loss: %f, Validation Acc: %f' %
               (epoch + 1, val_loss, val_acc))
 
-        print('saving checkpoint')
-        model.save((epoch + 1) * total_batch_size)
+        # print('saving checkpoint')
+        # model.save((epoch + 1) * total_batch_size)
 
     print('Training Completed')
     model.writer.close()

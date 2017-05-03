@@ -12,7 +12,7 @@ class Model(object):
         print("Init Model object")
         self.graph = graph
         self.sess = session
-        self.logs_path = '/tmp/tensorboard/'
+        self.log_path = '/tmp/tensorboard/'
         self.config = config
         self.learning_rate = self.config.lr
         self.batch_size = self.config.batch_size
@@ -22,8 +22,6 @@ class Model(object):
         # build computation graph
         self.build_graph()
         sys.stdout.write('</log>\n')
-        self.writer = tf.summary.FileWriter(
-            self.logs_path, graph=self.sess.graph)
 
     def init_model(self, images, training):
         # CNN Model with tf.layers
@@ -192,6 +190,8 @@ class Model(object):
                     self.summary = tf.summary.merge_all()
 
                     self.init = tf.global_variables_initializer()
+                    self.writer = tf.summary.FileWriter(
+                        self.log_path, graph=self.sess.graph_def)
 
                 with tf.device('/cpu:0'):
                     self.saver = tf.train.Saver(tf.trainable_variables())
