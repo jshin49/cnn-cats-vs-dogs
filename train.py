@@ -19,6 +19,8 @@ def train(train_data, validation_data, total_batch_size, val_batch_size):
         train_batches = generate_train_batches(train_data, config.batch_size)
         val_batches = generate_train_batches(
             validation_data, 100)
+        print(len(train_batches))
+        print(len(val_batches))
 
         for step in tqdm(range(total_batch_size)):
             train_batch = get_next_batch(train_batches)
