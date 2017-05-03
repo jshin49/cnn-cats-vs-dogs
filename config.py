@@ -22,5 +22,5 @@ class Config(object):
     train_size = 25000 - valid_size
 
     # Saver
-    model_name = 'gpu_model'.format(lr, image_size)
+    model_name = 'gpu-model-{}-{}-{}'.format(lr, image_size, batch_size)
     ckpt_path = 'ckpt/' + model_name
