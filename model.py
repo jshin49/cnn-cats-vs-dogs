@@ -114,20 +114,27 @@ class Model(object):
         return loss
 
     def test_batch(self, batch_images):
-        # K.set_learning_phase(1)
+        K.set_learning_phase(0)
         self.sess.run(self.init)
         feed_dict = {
             self.images: batch_images
         }
         pred = self.sess.run(
             [self.model], feed_dict=feed_dict)
+        K.set_learning_phase(1)
         return pred
 
-    def eval_batch(self):
-        pass
-
-    def eval_step(self):
-        pass
+    def eval_batch(self, batch_images, batch_labels):
+        K.set_learning_phase(0)
+        self.sess.run(self.init)
+        feed_dict = {
+            self.images: batch_images,
+            self.labels: batch_labels
+        }
+        pred, acc = self.sess.run(
+            [self.model, self.accuracy], feed_dict=feed_dict)
+        K.set_learning_phase(1)
+        return pred, acc
 
     def save(self, step):
         self.saver.save(self.sess, self.config.ckpt_path +

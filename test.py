@@ -7,7 +7,7 @@ from tqdm import tqdm	   # percentage bar for tasks
 
 from model import Model
 from config import Config
-from data_utils import process_data, generate_train_batches, get_next_batch
+from data_utils import load_data, generate_train_batches, get_next_batch
 
 # 0=Test, 1=Train
 K.set_learning_phase(0)
@@ -25,4 +25,16 @@ model = Model(config, sess, graph)
 model.restore()
 
 # Generate data and batches for each epoch
-train_data, validation_data, test_data = process_data()
+train_data, validation_data, test_data = load_data()
+train_images, train_labels = map(list, zip(*train_data))
+validation_images, validation_labels = map(list, zip(*validation_data))
+test_images, test_labels = map(list, zip(*test_data))
+
+validation_images = np.array(validation_images)
+validation_labels = np.array(validation_labels)
+validation_images = validation_images.reshape(-1, config.image_size,
+                                              config.image_size, config.channels)
+
+pred, acc = model.eval_batch(validation_images, validation_labels)
+
+print(acc)
