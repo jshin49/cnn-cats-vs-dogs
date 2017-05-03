@@ -71,7 +71,6 @@ model = Model(config, sess, graph)
 
 # Generate data and batches for each epoch
 train_data, validation_data, test_data = load_data()
-val_batch_size = int(len(validation_data) / 100)
 
 # Hyperparameter Tuning (Choose Best)
 l2s = [0.01]
@@ -85,6 +84,7 @@ for l2 in l2s:
         for batch_size in batch_sizes:
             config.batch_size = batch_size
             total_batch_size = int(config.train_size / config.batch_size)
+            val_batch_size = int(len(validation_data) / config.batch_size)
             for lr in lrs:
                 config.lr = lr
                 model.restore()
