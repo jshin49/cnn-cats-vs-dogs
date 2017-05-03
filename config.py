@@ -11,7 +11,7 @@ class Config(object):
     l2 = 0.001          # L2 Loss Coefficient
     dropout = 0.8  		# Dropout Rate
     batch_size = 16		# SGD Batch Size
-    epochs = 10			# Number of Training Epochs
+    epochs = 15			# Number of Training Epochs
 
     # Data Processing
     train_dir = './data/train'
