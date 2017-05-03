@@ -76,13 +76,12 @@ model = Model(config, sess, graph)
 train_data, _, test_data = load_data()
 
 # Hyperparameter Tuning (Choose Best)
-l2s = [0.01]
-# lrs = [0.1, 0.01, 0.001, 0.0001]
-lrs = [0.1, 0.01, 0.001]
+l2s = [0.001]
+lrs = [0.1, 0.01, 0.001, 0.0001, 0.00001]
 # lrs = [0.01, 0.005, 0.001, 0.0005, 0.0001]
-dropouts = [0.5]
+dropouts = [1.0]
 # dropouts = [0.5, 0.75, 1.0]
-batch_sizes = [16, 32, 64]
+batch_sizes = [16]
 # batch_sizes = [16, 32, 64, 128]
 for l2 in l2s:
     config.l2 = l2

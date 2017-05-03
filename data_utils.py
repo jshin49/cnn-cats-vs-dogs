@@ -71,38 +71,37 @@ if __name__ == '__main__':
     import image_utils as iu
     train_data, validation_data, test_data = iu.process_data()
 
-    train_batches = generate_train_batches(train_data, config.batch_size)
+    train_batches = generate_train_batches(train_data, 12)
     print(len(train_batches))
     print(train_batches[0][0][0].shape)
     val_batches = generate_train_batches(
         validation_data, config.batch_size)
     print(len(val_batches))
 
-    b1 = len(train_batches)
-    b2 = len(val_batches)
-    for step in tqdm(range(b1)):
-        if step % (b1 / b2) == 0 and b2 * (b1 / b2) <= step:
-            # print(step)
-            # train_batch = get_next_batch(train_batches)
-            val_batch = get_next_batch(val_batches)
+    # b1 = len(train_batches)
+    # b2 = len(val_batches)
+    # for step in tqdm(range(b1)):
+    #     if step % (b1 / b2) == 0 and b2 * (b1 / b2) <= step:
+    #         # print(step)
+    #         # train_batch = get_next_batch(train_batches)
+    #         val_batch = get_next_batch(val_batches)
 
     # train_batches = tf.train.batch(map(list, train_data), config.batch_size)
     # print(train_batches.shape)
-    # fig = plt.figure()
+    fig = plt.figure()
 
-    # np.random.shuffle(train_data)
-    # index = 1
-    # for data in train_data[:12]:
-    #     print(data[1])
-    #     y = fig.add_subplot(3, 4, index)
-    #     if data[1][0]:
-    #         label = "cat"
-    #     else:
-    #         label = "dog"
-    #     y.imshow(data[0], cmap='gray')
-    #     plt.title(label)
-    #     y.axes.get_xaxis().set_visible(False)
-    #     y.axes.get_yaxis().set_visible(False)
-    #     index += 1
+    index = 1
+    for data in get_next_batch(train_batches):
+        print(data[1])
+        y = fig.add_subplot(3, 4, index)
+        if data[1][0]:
+            label = "cat"
+        else:
+            label = "dog"
+        y.imshow(data[0], cmap='gray')
+        plt.title(label)
+        y.axes.get_xaxis().set_visible(False)
+        y.axes.get_yaxis().set_visible(False)
+        index += 1
 
-    # plt.show()
+    plt.show()
