@@ -12,6 +12,7 @@ class Config(object):
     dropout = 0.75  	# Dropout Rate
     batch_size = 32		# SGD Batch Size
     epochs = 50			# Number of Training Epochs
+    threshold = 0.5     # Threshold for classification
 
     # Data Processing
     train_dir = './data/train'

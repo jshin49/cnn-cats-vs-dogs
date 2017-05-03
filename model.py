@@ -172,6 +172,7 @@ class Model(object):
                     self.training = tf.placeholder(dtype=tf.bool)
 
                     self.model = self.init_model(self.images, self.training)
+                    self.predictions = self.model
                     # self.loss = tf.constant(1)
                     # self.accuracy = tf.constant(1)
                     # self.loss = tf.losses.softmax_cross_entropy(
@@ -181,10 +182,6 @@ class Model(object):
 
                     self.optimizer = tf.train.AdamOptimizer(
                         learning_rate=self.learning_rate).minimize(self.loss)
-
-                    correct_prediction = tf.equal(self.model, self.labels)
-                    self.accuracy = tf.reduce_mean(
-                        tf.cast(correct_prediction, tf.float32))
 
                     self.init = tf.global_variables_initializer()
                     self.saver = tf.train.Saver(tf.trainable_variables())
@@ -196,27 +193,36 @@ class Model(object):
             self.training: training
         }
 
+    def calculate_accuracy(self, pred, label):
+        predictions = map(
+            lambda x: 1 if x >= self.config.threshold else 0, pred)
+        correct_prediction = tf.equal(
+            predictions, batch_labels)
+        acc = tf.reduce_mean(
+            tf.cast(correct_prediction, tf.float32))
+        return self.sess.run(acc)
+
     def predict(self, batch_images, batch_labels):
         self.sess.run(self.init)
         feed_dict = self.generate_feed_dict(batch_images, batch_labels, False)
-        pred, loss, acc = self.sess.run(
-            [self.model, self.loss, self.accuracy], feed_dict=feed_dict)
-        return pred, loss, acc
+        pred, loss = self.sess.run(
+            [self.model, self.loss], feed_dict=feed_dict)
+        return pred, loss, self.calculate_accuracy(pred, batch_labels)
 
     def train_eval_batch(self, batch_images, batch_labels):
         self.sess.run(self.init)
         feed_dict = self.generate_feed_dict(batch_images, batch_labels, True)
-        loss, acc, _ = self.sess.run(
-            [self.loss, self.accuracy, self.optimizer], feed_dict=feed_dict)
-        return loss, acc
+        pred, loss, _ = self.sess.run(
+            [self.model, self.loss, self.optimizer], feed_dict=feed_dict)
+        return loss, self.calculate_accuracy(pred, batch_labels)
 
     def eval_batch(self, batch_images, batch_labels, training=False):
         self.sess.run(self.init)
         feed_dict = self.generate_feed_dict(
             batch_images, batch_labels, training)
-        loss, acc = self.sess.run(
-            [self.loss, self.accuracy], feed_dict=feed_dict)
-        return loss, acc
+        pred, loss = self.sess.run(
+            [self.model, self.loss], feed_dict=feed_dict)
+        return loss, self.calculate_accuracy(pred, batch_labels)
 
     def test_batch(self, batch_images):
         self.sess.run(self.init)
@@ -236,6 +242,7 @@ class Model(object):
         if ckpt and ckpt.model_checkpoint_path:
             self.saver.restore(self.sess, ckpt.model_checkpoint_path)
 
+
 if __name__ == '__main__':
     graph = tf.Graph()
     sess_config = tf.ConfigProto(
@@ -251,12 +258,13 @@ if __name__ == '__main__':
     batch = du.get_next_batch(batches)
     batch_images, batch_labels = map(list, zip(*batch))
     batch_images = np.array(batch_images)
-    # batch_labels = np.array(batch_labels)
+    print(batch_labels)
+    batch_labels = np.array(batch_labels).reshape(-1, 1)
     batch_images = batch_images.reshape(-1, config.image_size,
                                         config.image_size, config.channels)
     pred, loss, acc = model.predict(batch_images, batch_labels)
     # zeros = np.zeros((16, 224, 224, 3), dtype=np.int)
     # pred, loss, acc = model.predict(zeros, batch_labels)
+    print(pred, batch_labels)
     print(loss)
-    print(pred.shape)
     print(acc)
