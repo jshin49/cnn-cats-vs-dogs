@@ -22,7 +22,8 @@ class Model(object):
         # build computation graph
         self.build_graph()
         sys.stdout.write('</log>\n')
-        self.writer = tf.summary.FileWriter(self.logs_path, graph=self.graph)
+        self.writer = tf.summary.FileWriter(
+            self.logs_path, graph=self.sess.graph)
 
     def init_model(self, images, training):
         # CNN Model with tf.layers
