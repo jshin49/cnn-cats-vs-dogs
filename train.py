@@ -2,8 +2,8 @@ from __future__ import print_function
 
 import numpy as np
 import tensorflow as tf
-from keras import backend as K
 from tqdm import tqdm	   # percentage bar for tasks
+import random
 
 from model import Model
 from config import Config
@@ -51,6 +51,12 @@ def train(train_data, total_batch_size, validation_data=None, val_batch_size=Non
 
         print('\nEpoch: %d, Avg Loss: %f, Train Acc: %f' %
               (epoch + 1, avg_loss, avg_acc))
+
+        val_images, val_labels = map(
+            list, zip(*validation_data))
+        val_loss, val_acc = model.eval_batch(val_images, val_labels)
+        print('\nEpoch: %d, Validation Loss: %f, Validation Acc: %f' %
+              (epoch + 1, val_loss, val_acc))
         # print('\nEpoch: %d, Avg. Loss: %f, Val Loss: %f' %
         #       (epoch, avg_loss / total_batch_size, avg_val_loss / (val_batch_size * validation_check)))
         # print('\nEpoch: %d, Train Acc: %f, Val Acc: %f' %
@@ -73,15 +79,15 @@ config = Config()
 model = Model(config, sess, graph)
 
 # Generate data and batches for each epoch
-train_data, _, test_data = load_data()
+train_data, validation_data, test_data = load_data()
 
 # Hyperparameter Tuning (Choose Best)
 l2s = [0.001]
-lrs = [0.1, 0.01, 0.001, 0.0001, 0.00001]
+lrs = [0.001]
 # lrs = [0.01, 0.005, 0.001, 0.0005, 0.0001]
 dropouts = [1.0]
 # dropouts = [0.5, 0.75, 1.0]
-batch_sizes = [16]
+batch_sizes = [32, 64, 128]
 # batch_sizes = [16, 32, 64, 128]
 for l2 in l2s:
     config.l2 = l2
@@ -98,7 +104,8 @@ for l2 in l2s:
                       (config.l2, config.dropout, config.batch_size, config.lr))
                 # train(train_data, validation_data,
                 #       total_batch_size, val_batch_size)
-                train(train_data, total_batch_size)
+                train(train_data, total_batch_size,
+                      random.sample(validation_data, 500))
 
 # total_batch_size = int(config.train_size / config.batch_size)
 # val_batch_size = int(config.valid_size / config.batch_size)
