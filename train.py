@@ -28,6 +28,7 @@ model.restore()
 # Generate data and batches for each epoch
 train_data, validation_data, test_data = load_data()
 total_batch_size = int(config.train_size / config.batch_size)
+val_batch_size = int(len(validation_data) / 100)
 for epoch in tqdm(range(config.epochs)):
     avg_loss = 0
     avg_acc = 0
@@ -51,7 +52,7 @@ for epoch in tqdm(range(config.epochs)):
         avg_loss += loss / total_batch_size
         avg_acc += acc / total_batch_size
 
-        if step % (total_batch_size / len(val_batches)) == 0:
+        if step % (total_batch_size / val_batch_size) == 0:
             val_batch = get_next_batch(val_batches)
             val_batch_images, val_batch_labels = map(list, zip(*val_batch))
             val_batch_images = np.array(val_batch_images)
@@ -61,8 +62,8 @@ for epoch in tqdm(range(config.epochs)):
 
             val_loss, val_acc = model.eval_batch(
                 val_batch_images, val_batch_labels)
-            avg_val_loss += val_loss / (len(val_batches))
-            avg_val_acc += val_acc / (len(val_batches))
+            avg_val_loss += val_loss / val_batch_size
+            avg_val_acc += val_acc / val_batch_size
 
     print('\nEpoch: %d, Avg. Loss: %f, Val Loss: %f' %
           (epoch, avg_loss, avg_val_loss))
