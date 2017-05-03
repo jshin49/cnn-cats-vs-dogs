@@ -48,7 +48,7 @@ def create_train_data():
         # img = img.astype(np.float32, copy=False)
         # for c in range(3):
         #     img[:, :, c] = img[:, :, c] - mean_pixel[c]
-        # img = img.transpose((2, 0, 1))
+        img = img.transpose((2, 0, 1))
         # img = np.expand_dims(img, axis=0)
 
         train_data.append([np.array(img), np.array(label)])
@@ -65,7 +65,7 @@ def process_test_data():
         img_num = img.split('.')[0]
         img = cv2.imread(path, cv2.IMREAD_COLOR)
         img = cv2.resize(img, (IMG_SIZE, IMG_SIZE))
-        # img = img.transpose((2, 0, 1))
+        img = img.transpose((2, 0, 1))
         test_data.append([np.array(img), img_num])
 
     np.save('test_data.npy', test_data)
