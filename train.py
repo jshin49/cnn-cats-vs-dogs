@@ -30,7 +30,9 @@ train_data, validation_data, test_data = load_data()
 total_batch_size = int(config.train_size / config.batch_size)
 for epoch in tqdm(range(config.epochs)):
     avg_loss = 0
+    avg_acc = 0
     avg_val_loss = 0
+    avg_val_acc = 0
     train_batches = generate_train_batches(train_data, config.batch_size)
     val_batches = generate_train_batches(
         validation_data, 100)
@@ -45,7 +47,9 @@ for epoch in tqdm(range(config.epochs)):
                                                         config.image_size, config.channels)
 
         loss = model.train_batch(train_batch_images, train_batch_labels)
+        acc = model.eval_batch(train_batch_images, train_batch_labels)
         avg_loss += loss / total_batch_size
+        avg_acc += acc / total_batch_size
 
         if step % (total_batch_size / len(val_batches)) == 0:
             val_batch = get_next_batch(val_batches)
@@ -56,10 +60,14 @@ for epoch in tqdm(range(config.epochs)):
                                                         config.image_size, config.channels)
 
             _, val_loss = model.predict(val_batch_images, val_batch_labels)
+            val_acc = model.eval_batch(val_batch_images, val_batch_labels)
             avg_val_loss += val_loss / (len(val_batches))
+            avg_val_acc += val_acc / (len(val_batches))
 
-    print('Epoch: %d, Avg. Loss: %f, Val Loss: %f' %
+    print('\nEpoch: %d, Avg. Loss: %f, Val Loss: %f' %
           (epoch, avg_loss, avg_val_loss))
+    print('\nEpoch: %d, Train Acc: %f, Val Acc: %f' %
+          (epoch, avg_acc, avg_val_acc))
     print('saving checkpoint')
     model.save((epoch + 1) * total_batch_size)
 

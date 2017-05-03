@@ -134,7 +134,7 @@ class Model(object):
         acc = self.sess.run(
             [self.accuracy], feed_dict=feed_dict)
         K.set_learning_phase(1)
-        return acc
+        return acc[0]
 
     def save(self, step):
         self.saver.save(self.sess, self.config.ckpt_path +
