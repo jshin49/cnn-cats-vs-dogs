@@ -22,6 +22,7 @@ class Model(object):
         # build computation graph
         self.build_graph()
         sys.stdout.write('</log>\n')
+        self.writer = tf.summary.FileWriter(self.logs_path, graph=self.graph)
 
     def init_model(self, images, training):
         # CNN Model with tf.layers
@@ -171,11 +172,14 @@ class Model(object):
                     self.training = tf.placeholder(dtype=tf.bool)
 
                     self.model = self.init_model(self.images, self.training)
-                    self.predictions = self.model
-                    # self.loss = tf.constant(1)
-                    # self.accuracy = tf.constant(1)
-                    # self.loss = tf.losses.softmax_cross_entropy(
-                    #     onehot_labels=self.labels, logits=self.model)
+                    thresholds = tf.fill(
+                        [self.config.batch_size], self.config.threshold)
+                    self.predictions = tf.greater_equal(
+                        self.model, thresholds)
+                    correct_prediction = tf.equal(
+                        self.predictions, tf.cast(self.labels, tf.bool))
+                    self.accuracy = tf.reduce_mean(
+                        tf.cast(correct_prediction, tf.float32))
                     self.loss = tf.losses.log_loss(
                         labels=self.labels, predictions=self.model)
                     self.optimizer = tf.train.AdamOptimizer(
@@ -183,6 +187,7 @@ class Model(object):
 
                     # TensorBoard Summary
                     tf.summary.scalar("log_loss", self.loss)
+                    tf.summary.scalar("accuracy", self.accuracy)
                     self.summary = tf.summary.merge_all()
 
                     self.init = tf.global_variables_initializer()
@@ -195,42 +200,38 @@ class Model(object):
             self.training: training
         }
 
-    def calculate_accuracy(self, pred, labels):
-        predictions = map(
-            lambda x: 1 if x >= self.config.threshold else 0, pred)
-        correct_prediction = tf.equal(
-            predictions, labels)
-        acc = tf.reduce_mean(
-            tf.cast(correct_prediction, tf.float32))
-        return self.sess.run(acc)
+    # def calculate_accuracy(self, pred, labels):
+    #     predictions = map(
+    #         lambda x: 1 if x >= self.config.threshold else 0, pred)
+    #     correct_prediction = tf.equal(
+    #         predictions, labels)
+    #     acc = tf.reduce_mean(
+    #         tf.cast(correct_prediction, tf.float32))
+    #     return self.sess.run(acc)
 
     def predict(self, batch_images, batch_labels):
         self.sess.run(self.init)
         feed_dict = self.generate_feed_dict(batch_images, batch_labels, False)
-        pred, loss = self.sess.run(
-            [self.model, self.loss], feed_dict=feed_dict)
-        accuracy = self.calculate_accuracy(pred, batch_labels)
-        return pred, loss, accuracy
+        pred, loss, acc = self.sess.run(
+            [self.model, self.loss, self.accuracy], feed_dict=feed_dict)
+        return pred, loss, acc
 
     def train_eval_batch(self, batch_images, batch_labels, training=True):
         self.sess.run(self.init)
         feed_dict = self.generate_feed_dict(
             batch_images, batch_labels, training)
-        summary, pred, loss, _ = self.sess.run(
-            [self.summary, self.model, self.loss, self.optimizer], feed_dict=feed_dict)
-        accuracy = self.calculate_accuracy(pred, batch_labels)
-        tf.summary.scalar("accuracy", accuracy)
+        summary, loss, acc, _ = self.sess.run(
+            [self.summary, self.loss, self.accuracy, self.optimizer], feed_dict=feed_dict)
 
-        return summary, loss, accuracy
+        return summary, loss, acc
 
     def eval_batch(self, batch_images, batch_labels, training=False):
         self.sess.run(self.init)
         feed_dict = self.generate_feed_dict(
             batch_images, batch_labels, training)
-        pred, loss = self.sess.run(
-            [self.model, self.loss], feed_dict=feed_dict)
-        accuracy = self.calculate_accuracy(pred, batch_labels)
-        return loss, accuracy
+        loss, acc = self.sess.run(
+            [self.loss, self.accuracy], feed_dict=feed_dict)
+        return loss, acc
 
     def test_batch(self, batch_images):
         self.sess.run(self.init)

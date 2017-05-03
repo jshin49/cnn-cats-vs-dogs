@@ -14,8 +14,6 @@ from data_utils import load_data, generate_train_batches, get_next_batch
 
 
 def train(train_data, total_batch_size, validation_data=None, val_batch_size=None):
-    train_writer = tf.summary.FileWriter(model.logs_path, graph=model.graph)
-
     for epoch in tqdm(range(config.epochs)):
         avg_loss = 0
         avg_acc = 0
@@ -34,7 +32,7 @@ def train(train_data, total_batch_size, validation_data=None, val_batch_size=Non
                 train_batch_images, train_batch_labels, False)
             avg_loss += (loss / total_batch_size)
             avg_acc += (acc / total_batch_size)
-            train_writer.add_summary(
+            model.writer.add_summary(
                 summary, (epoch + 1) * total_batch_size + step)
 
         print('\nEpoch: %d, Avg Loss: %f, Train Acc: %f' %
@@ -53,7 +51,7 @@ def train(train_data, total_batch_size, validation_data=None, val_batch_size=Non
         model.save((epoch + 1) * total_batch_size)
 
     print('Training Completed')
-    train_writer.close()
+    model.writer.close()
 
 
 # Initialize model
