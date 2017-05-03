@@ -48,4 +48,4 @@ val_batch_images = val_batch_images.reshape(-1, config.image_size,
 
 acc2 = model.eval_batch(val_batch_images, val_batch_labels)
 
-print('Training Acc: %d, Validation Acc: %f' % (acc1, acc2))
+print('Training Acc: %f, Validation Acc: %f' % (acc1, acc2))
