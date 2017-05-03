@@ -148,6 +148,9 @@ if __name__ == '__main__':
     sess_config.gpu_options.allow_growth = True
     sess = tf.Session(config=sess_config)
 
+    config = Config()
+    model = Model(config, sess, graph)
+
     train_data, validation_data, test_data = du.load_data()
     batches = du.generate_train_batches(train_data, config.batch_size)
     batch = du.get_next_batch(batches)
