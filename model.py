@@ -209,9 +209,10 @@ class Model(object):
             [self.model, self.loss], feed_dict=feed_dict)
         return pred, loss, self.calculate_accuracy(pred, batch_labels)
 
-    def train_eval_batch(self, batch_images, batch_labels):
+    def train_eval_batch(self, batch_images, batch_labels, training=True):
         self.sess.run(self.init)
-        feed_dict = self.generate_feed_dict(batch_images, batch_labels, True)
+        feed_dict = self.generate_feed_dict(
+            batch_images, batch_labels, training)
         pred, loss, _ = self.sess.run(
             [self.model, self.loss, self.optimizer], feed_dict=feed_dict)
         return loss, self.calculate_accuracy(pred, batch_labels)

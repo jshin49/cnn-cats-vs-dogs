@@ -8,8 +8,8 @@ class Config(object):
     """
     # Hyperparameters
     lr = 0.001  		# Learning Rate
-    l2 = 0.001          # L2 Loss Coefficient
-    dropout = 0.75  	# Dropout Rate
+    l2 = 0.0001         # L2 Loss Coefficient
+    dropout = 0.5     	# Dropout Rate
     batch_size = 32		# SGD Batch Size
     epochs = 50			# Number of Training Epochs
     threshold = 0.5     # Threshold for classification

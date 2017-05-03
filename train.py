@@ -32,7 +32,7 @@ def train(train_data, total_batch_size, validation_data=None, val_batch_size=Non
                                                             config.image_size, config.channels)
 
             loss, acc = model.train_eval_batch(
-                train_batch_images, train_batch_labels)
+                train_batch_images, train_batch_labels, False)
             avg_loss += (loss / total_batch_size)
             avg_acc += (acc / total_batch_size)
 
@@ -67,7 +67,9 @@ def train(train_data, total_batch_size, validation_data=None, val_batch_size=Non
 
     print('Training Completed')
 
-
+tf.logging.set_verbosity(tf.logging.ERROR)
+# import os
+# os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 # Initialize model
 graph = tf.Graph()
 gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.9)
@@ -91,25 +93,25 @@ dropouts = [1.0]
 # dropouts = [0.5, 0.75, 1.0]
 batch_sizes = [32]
 # batch_sizes = [16, 32, 64, 128]
-for l2 in l2s:
-    config.l2 = l2
-    for dropout in dropouts:
-        config.dropout = dropout
-        for batch_size in batch_sizes:
-            config.batch_size = batch_size
-            total_batch_size = int(config.train_size / config.batch_size)
-            # val_batch_size = int(config.valid_size / config.batch_size)
-            for lr in lrs:
-                config.lr = lr
-                model.restore()
-                print('L2: %f, Dropout: %f, Batch Size: %d, Learning Rate: %f \n' %
-                      (config.l2, config.dropout, config.batch_size, config.lr))
-                # train(train_data, validation_data,
-                #       total_batch_size, val_batch_size)
-                train(train_data, total_batch_size,
-                      random.sample(validation_data, 500))
+# for l2 in l2s:
+#     config.l2 = l2
+#     for dropout in dropouts:
+#         config.dropout = dropout
+#         for batch_size in batch_sizes:
+#             config.batch_size = batch_size
+#             total_batch_size = int(config.train_size / config.batch_size)
+#             # val_batch_size = int(config.valid_size / config.batch_size)
+#             for lr in lrs:
+#                 config.lr = lr
+#                 model.restore()
+#                 print('L2: %f, Dropout: %f, Batch Size: %d, Learning Rate: %f \n' %
+#                       (config.l2, config.dropout, config.batch_size, config.lr))
+#                 # train(train_data, validation_data,
+#                 #       total_batch_size, val_batch_size)
+#                 train(train_data, total_batch_size,
+#                       random.sample(validation_data, 500))
 
-# total_batch_size = int(config.train_size / config.batch_size)
+total_batch_size = int(config.train_size / config.batch_size)
 # val_batch_size = int(config.valid_size / config.batch_size)
-# model.restore()
-# train(train_data, validation_data, total_batch_size, val_batch_size)
+model.restore()
+train(train_data, total_batch_size, random.sample(validation_data, 500))
