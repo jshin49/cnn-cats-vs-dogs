@@ -20,7 +20,7 @@ CHANNELS = config.channels
 LR = config.lr
 
 
-def split_dataset(train_data, validation_data, size):
+def split_dataset(train_data, validation_data, size=IMG_SIZE):
     if validation_data is not None:
         data = np.concatenate([train_data, validation_data])
     else:

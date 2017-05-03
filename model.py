@@ -182,8 +182,7 @@ class Model(object):
                     self.optimizer = tf.train.AdamOptimizer(
                         learning_rate=self.learning_rate).minimize(self.loss)
 
-                    correct_prediction = tf.equal(
-                        tf.argmax(self.model, 1), tf.argmax(self.labels, 1))
+                    correct_prediction = tf.equal(self.model, self.labels)
                     self.accuracy = tf.reduce_mean(
                         tf.cast(correct_prediction, tf.float32))
 

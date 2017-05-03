@@ -91,7 +91,7 @@ def process_data(size):
         train_data = create_train_data()
         print("Splitting into train/validation data set")
         train_data, validation_data = \
-            du.split_dataset(train_data, None)
+            du.split_dataset(train_data, None, size)
 
     if os.path.exists('test_data' + str(size) + '.npy'):
         print("Loading existing test data")
