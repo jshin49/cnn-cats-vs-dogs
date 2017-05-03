@@ -27,6 +27,7 @@ def train(train_data, total_batch_size, validation_data=None, val_batch_size=Non
                 list, zip(*train_batch))
             train_batch_images = np.array(train_batch_images)
             train_batch_labels = np.array(train_batch_labels)
+            train_batch_labels = np.array(train_batch_labels).reshape(-1, 1)
             train_batch_images = train_batch_images.reshape(-1, config.image_size,
                                                             config.image_size, config.channels)
 
