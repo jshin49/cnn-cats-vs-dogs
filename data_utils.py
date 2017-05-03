@@ -6,6 +6,7 @@ from tqdm import tqdm	   # percentage bar for tasks
 import random
 import matplotlib.pyplot as plt
 from matplotlib import ticker
+import tensorflow as tf
 # %matplotlib inline
 
 from config import Config
@@ -81,10 +82,12 @@ if __name__ == '__main__':
     b2 = len(val_batches)
     for step in tqdm(range(b1)):
         if step % (b1 / b2) == 0 and b2 * (b1 / b2) <= step:
-            print(step)
+            # print(step)
             # train_batch = get_next_batch(train_batches)
             val_batch = get_next_batch(val_batches)
 
+    # train_batches = tf.train.batch(map(list, train_data), config.batch_size)
+    # print(train_batches.shape)
     # fig = plt.figure()
 
     # np.random.shuffle(train_data)

@@ -32,8 +32,8 @@ def train(train_data, validation_data, total_batch_size, val_batch_size):
 
             loss, acc = model.train_eval_batch(
                 train_batch_images, train_batch_labels)
-            avg_loss += loss / total_batch_size
-            avg_acc += acc / total_batch_size
+            avg_loss += loss  # (loss / total_batch_size)
+            avg_acc += acc  # (acc / total_batch_size)
 
             validation_check = total_batch_size / val_batch_size
             if step % validation_check == 0 and (val_batch_size * validation_check) <= step:
@@ -46,13 +46,13 @@ def train(train_data, validation_data, total_batch_size, val_batch_size):
 
                 val_loss, val_acc = model.eval_batch(
                     val_batch_images, val_batch_labels)
-                avg_val_loss += val_loss / val_batch_size
-                avg_val_acc += val_acc / val_batch_size
+                avg_val_loss += val_loss  # (val_loss / val_batch_size)
+                avg_val_acc += val_acc  # (val_acc / val_batch_size)
 
         print('\nEpoch: %d, Avg. Loss: %f, Val Loss: %f' %
-              (epoch, avg_loss, avg_val_loss))
+              (epoch, avg_loss / total_batch_size, avg_val_loss / val_batch_size))
         print('\nEpoch: %d, Train Acc: %f, Val Acc: %f' %
-              (epoch, avg_acc, avg_val_acc))
+              (epoch, avg_acc / total_batch_size, avg_val_acc / val_batch_size))
         print('saving checkpoint')
         model.save((epoch + 1) * total_batch_size)
 
@@ -77,7 +77,7 @@ train_data, validation_data, test_data = load_data()
 l2s = [0.01]
 lrs = [0.005, 0.001, 0.0005, 0.0001]
 dropouts = [0.5, 0.75, 1.0]
-batch_sizes = [32, 64, 128]
+batch_sizes = [16, 32, 64, 128]
 for l2 in l2s:
     config.l2 = l2
     for dropout in dropouts:
