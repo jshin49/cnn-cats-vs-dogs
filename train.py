@@ -71,20 +71,20 @@ model = Model(config, sess, graph)
 
 # Generate data and batches for each epoch
 train_data, validation_data, test_data = load_data()
-total_batch_size = int(config.train_size / config.batch_size)
 val_batch_size = int(len(validation_data) / 100)
 
 # Hyperparameter Tuning (Choose Best)
 l2s = [0.01]
 lrs = [0.005, 0.001, 0.0005, 0.0001]
-dropouts = [0.5, 0.6, 0.7, 0.8]
-batch_sizes = [16, 32, 64, 128]
+dropouts = [0.5, 0.75, 1.0]
+batch_sizes = [32, 64, 128]
 for l2 in l2s:
     config.l2 = l2
     for dropout in dropouts:
         config.dropout = dropout
         for batch_size in batch_sizes:
             config.batch_size = batch_size
+            total_batch_size = int(config.train_size / config.batch_size)
             for lr in lrs:
                 config.lr = lr
                 model.restore()

@@ -10,7 +10,7 @@ class Config(object):
     lr = 0.001  		# Learning Rate
     l2 = 0.001          # L2 Loss Coefficient
     dropout = 0.8  		# Dropout Rate
-    batch_size = 16		# SGD Batch Size
+    batch_size = 32		# SGD Batch Size
     epochs = 15			# Number of Training Epochs
 
     # Data Processing
