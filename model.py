@@ -84,7 +84,6 @@ class Model(object):
 
                     correct_prediction = tf.equal(
                         tf.argmax(self.model, 1), tf.argmax(self.labels, 1))
-                    print(correct_prediction)
                     self.accuracy = tf.reduce_mean(
                         tf.cast(correct_prediction, tf.float32))
 
@@ -132,10 +131,10 @@ class Model(object):
             self.images: batch_images,
             self.labels: batch_labels
         }
-        pred, acc = self.sess.run(
-            [self.model, self.accuracy], feed_dict=feed_dict)
+        acc = self.sess.run(
+            [self.accuracy], feed_dict=feed_dict)
         K.set_learning_phase(1)
-        return pred, acc
+        return acc
 
     def save(self, step):
         self.saver.save(self.sess, self.config.ckpt_path +
