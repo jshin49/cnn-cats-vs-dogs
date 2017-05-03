@@ -4,7 +4,6 @@ import tensorflow as tf
 from keras import backend as K
 from keras.layers import Activation, Dropout, Flatten, Dense, Conv2D, MaxPooling2D, ZeroPadding2D
 from keras.objectives import categorical_crossentropy
-from keras.metrics import categorical_accuarcy
 
 from config import Config
 import data_utils as du
@@ -87,9 +86,8 @@ class Model(object):
 
                     # self.accuracy = tf.reduce_mean(
                     #     tf.cast(correct_prediction, tf.float32))
-
-                    self.accuracy = categorical_accuarcy(
-                        self.labels, self.model)
+                    self.accuracy = tf.reduce_mean(
+                        tf.cast(tf.equal(self.prediction, self.labels), tf.float32), name="accuracy")
 
                     self.init = tf.global_variables_initializer()
                     self.saver = tf.train.Saver(tf.trainable_variables())
