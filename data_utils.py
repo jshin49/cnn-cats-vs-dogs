@@ -70,10 +70,21 @@ if __name__ == '__main__':
     import image_utils as iu
     train_data, validation_data, test_data = iu.process_data()
 
-    batches = generate_train_batches(train_data, config.batch_size)
-    next = get_next_batch(batches)
-    print(len(batches))
-    print(batches[0][0][0].shape)
+    train_batches = generate_train_batches(train_data, config.batch_size)
+    print(len(train_batches))
+    print(train_batches[0][0][0].shape)
+    val_batches = generate_train_batches(
+        validation_data, config.batch_size)
+    print(len(val_batches))
+
+    b1 = len(train_batches)
+    b2 = len(val_batches)
+    for step in tqdm(range(b1)):
+        if step % (b1 / b2) == 0 and b2 * (b1 / b2) <= step:
+            print(step)
+            # train_batch = get_next_batch(train_batches)
+            val_batch = get_next_batch(val_batches)
+
     # fig = plt.figure()
 
     # np.random.shuffle(train_data)
