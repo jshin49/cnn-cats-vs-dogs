@@ -97,21 +97,33 @@ class Model(object):
             self.images: batch_images,
             self.labels: batch_labels
         }
-        pred, loss = self.sess.run(
-            [self.model, self.loss], feed_dict=feed_dict)
+        pred, loss, acc = self.sess.run(
+            [self.model, self.loss, self.accuracy], feed_dict=feed_dict)
         K.set_learning_phase(1)
-        return pred, loss
+        return pred, loss, acc
 
-    def train_batch(self, batch_images, batch_labels):
+    def train_eval_batch(self, batch_images, batch_labels):
         # K.set_learning_phase(1)
         self.sess.run(self.init)
         feed_dict = {
             self.images: batch_images,
             self.labels: batch_labels
         }
-        loss, _ = self.sess.run(
-            [self.loss, self.optimizer], feed_dict=feed_dict)
-        return loss
+        loss, acc, _ = self.sess.run(
+            [self.loss, self.accuracy, self.optimizer], feed_dict=feed_dict)
+        return loss, acc
+
+    def eval_batch(self, batch_images, batch_labels):
+        K.set_learning_phase(0)
+        self.sess.run(self.init)
+        feed_dict = {
+            self.images: batch_images,
+            self.labels: batch_labels
+        }
+        loss, acc = self.sess.run(
+            [self.loss, self.accuracy], feed_dict=feed_dict)
+        K.set_learning_phase(1)
+        return loss, acc
 
     def test_batch(self, batch_images):
         K.set_learning_phase(0)
@@ -123,18 +135,6 @@ class Model(object):
             [self.model], feed_dict=feed_dict)
         K.set_learning_phase(1)
         return pred
-
-    def eval_batch(self, batch_images, batch_labels):
-        K.set_learning_phase(0)
-        self.sess.run(self.init)
-        feed_dict = {
-            self.images: batch_images,
-            self.labels: batch_labels
-        }
-        acc = self.sess.run(
-            [self.accuracy], feed_dict=feed_dict)
-        K.set_learning_phase(1)
-        return acc[0]
 
     def save(self, step):
         self.saver.save(self.sess, self.config.ckpt_path +

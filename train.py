@@ -46,8 +46,8 @@ for epoch in tqdm(range(config.epochs)):
         train_batch_images = train_batch_images.reshape(-1, config.image_size,
                                                         config.image_size, config.channels)
 
-        loss = model.train_batch(train_batch_images, train_batch_labels)
-        acc = model.eval_batch(train_batch_images, train_batch_labels)
+        loss, acc = model.train_eval_batch(
+            train_batch_images, train_batch_labels)
         avg_loss += loss / total_batch_size
         avg_acc += acc / total_batch_size
 
@@ -59,8 +59,8 @@ for epoch in tqdm(range(config.epochs)):
             val_batch_images = val_batch_images.reshape(-1, config.image_size,
                                                         config.image_size, config.channels)
 
-            _, val_loss = model.predict(val_batch_images, val_batch_labels)
-            val_acc = model.eval_batch(val_batch_images, val_batch_labels)
+            val_loss, val_acc = model.eval_batch(
+                val_batch_images, val_batch_labels)
             avg_val_loss += val_loss / (len(val_batches))
             avg_val_acc += val_acc / (len(val_batches))
 
