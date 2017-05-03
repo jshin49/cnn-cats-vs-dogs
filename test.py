@@ -29,7 +29,7 @@ train_data, validation_data, test_data = load_data()
 train_images, train_labels = map(list, zip(*train_data))
 # test_images, test_labels = map(list, zip(*test_data))
 
-train_batches = generate_train_batches(train_data, config.batch_size)
+train_batches = generate_train_batches(train_data, 100)
 train_batch = get_next_batch(train_batches)
 train_batch_images, train_batch_labels = map(list, zip(*train_batch))
 train_batch_images = np.array(train_batch_images)
