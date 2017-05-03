@@ -4,6 +4,7 @@ import tensorflow as tf
 from keras import backend as K
 from keras.layers import Activation, Dropout, Flatten, Dense, Conv2D, MaxPooling2D, ZeroPadding2D
 from keras.objectives import categorical_crossentropy
+from keras.metrics import categorical_accuarcy
 
 from config import Config
 import data_utils as du
@@ -81,11 +82,14 @@ class Model(object):
 
                     self.optimizer = tf.train.RMSPropOptimizer(
                         learning_rate=self.learning_rate).minimize(self.loss)
-                    correct_prediction = tf.equal(
-                        tf.argmax(self.labels, 1), tf.argmax(self.model, 1))
+                    # correct_prediction = tf.equal(
+                    #     tf.argmax(self.labels, 1), tf.argmax(self.model, 1))
 
-                    self.accuracy = tf.reduce_mean(
-                        tf.cast(correct_prediction, tf.float32))
+                    # self.accuracy = tf.reduce_mean(
+                    #     tf.cast(correct_prediction, tf.float32))
+
+                    self.accuracy = categorical_accuarcy(
+                        self.labels, self.model)
 
                     self.init = tf.global_variables_initializer()
                     self.saver = tf.train.Saver(tf.trainable_variables())
