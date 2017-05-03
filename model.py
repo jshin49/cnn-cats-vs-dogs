@@ -251,7 +251,7 @@ if __name__ == '__main__':
     batch = du.get_next_batch(batches)
     batch_images, batch_labels = map(list, zip(*batch))
     batch_images = np.array(batch_images)
-    batch_labels = np.array(batch_labels)
+    # batch_labels = np.array(batch_labels)
     batch_images = batch_images.reshape(-1, config.image_size,
                                         config.image_size, config.channels)
     pred, loss, acc = model.predict(batch_images, batch_labels)
