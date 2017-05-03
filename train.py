@@ -50,7 +50,7 @@ def train(train_data, total_batch_size, validation_data=None, val_batch_size=Non
             #     avg_val_acc += val_acc  # (val_acc / val_batch_size)
 
         print('\nEpoch: %d, Avg Loss: %f, Train Acc: %f' %
-              (epoch + 1, avg_loss))
+              (epoch + 1, avg_loss, avg_acc))
         # print('\nEpoch: %d, Avg. Loss: %f, Val Loss: %f' %
         #       (epoch, avg_loss / total_batch_size, avg_val_loss / (val_batch_size * validation_check)))
         # print('\nEpoch: %d, Train Acc: %f, Val Acc: %f' %
