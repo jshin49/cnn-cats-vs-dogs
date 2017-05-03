@@ -75,9 +75,10 @@ train_data, validation_data, test_data = load_data()
 
 # Hyperparameter Tuning (Choose Best)
 l2s = [0.01]
-lrs = [0.005, 0.001, 0.0005, 0.0001]
+lrs = [0.1, 0.01, 0.001]
+# lrs = [0.005, 0.001, 0.0005, 0.0001]
 dropouts = [0.5, 0.75, 1.0]
-batch_sizes = [16, 32, 64, 128]
+batch_sizes = [32, 64, 128]
 for l2 in l2s:
     config.l2 = l2
     for dropout in dropouts:

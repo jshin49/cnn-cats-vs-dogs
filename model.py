@@ -125,7 +125,7 @@ class Model(object):
         fc1 = tf.layers.dense(
             inputs=flatten,
             units=256,
-            # activation=tf.nn.relu,
+            activation=tf.nn.relu,
             kernel_initializer=initializer,
             kernel_regularizer=regularizer)
         fc1 = tf.layers.dropout(
@@ -135,7 +135,7 @@ class Model(object):
         fc2 = tf.layers.dense(
             inputs=fc1,
             units=256,
-            # activation=tf.nn.relu,
+            activation=tf.nn.relu,
             kernel_initializer=initializer,
             kernel_regularizer=regularizer)
         fc2 = tf.layers.dropout(
