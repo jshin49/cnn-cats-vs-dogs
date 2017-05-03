@@ -15,6 +15,7 @@ config = Config()
 
 TRAIN_DIR = config.train_dir
 TEST_DIR = config.test_dir
+IMG_DIR = config.image_dir
 IMG_SIZE = config.image_size
 CHANNELS = config.channels
 LR = config.lr
@@ -34,9 +35,10 @@ def split_dataset(train_data, validation_data, size=IMG_SIZE):
     print(train_data.shape)
     print(validation_data.shape)
 
-    if not os.path.exists('validation_data' + str(size) + '.npy'):
-        np.save('train_data' + str(size) + '.npy', train_data)
-        np.save('validation_data' + str(size) + '.npy', validation_data)
+    if not os.path.exists(IMG_DIR + 'validation_data' + str(size) + '.npy'):
+        np.save(IMG_DIR + 'train_data' + str(size) + '.npy', train_data)
+        np.save(IMG_DIR + 'validation_data' +
+                str(size) + '.npy', validation_data)
 
     return train_data, validation_data
 
@@ -55,11 +57,12 @@ def get_next_batch(batches):
 
 def load_data():
     print("\nLoading existing training data")
-    train_data = np.load('train_data' + str(IMG_SIZE) + '.npy')
+    train_data = np.load(IMG_DIR + 'train_data' + str(IMG_SIZE) + '.npy')
     print("Loading existing validation data")
-    validation_data = np.load('validation_data' + str(IMG_SIZE) + '.npy')
+    validation_data = np.load(
+        IMG_DIR + 'validation_data' + str(IMG_SIZE) + '.npy')
     print("Loading existing test data")
-    test_data = np.load('test_data' + str(IMG_SIZE) + '.npy')
+    test_data = np.load(IMG_DIR + 'test_data' + str(IMG_SIZE) + '.npy')
     print("Shuffling and Re-splitting into train/validation data set")
     train_data, validation_data = \
         split_dataset(train_data, validation_data, config.split_rate)

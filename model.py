@@ -176,8 +176,8 @@ class Model(object):
                     # self.accuracy = tf.constant(1)
                     # self.loss = tf.losses.softmax_cross_entropy(
                     #     onehot_labels=self.labels, logits=self.model)
-                    self.loss = tf.losses.sigmoid_cross_entropy(
-                        multi_class_labels=self.labels, logits=self.model)
+                    self.loss = tf.losses.log_loss(
+                        labels=self.labels, logits=self.model)
 
                     self.optimizer = tf.train.AdamOptimizer(
                         learning_rate=self.learning_rate).minimize(self.loss)
