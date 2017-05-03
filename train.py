@@ -1,5 +1,8 @@
 from __future__ import print_function
 
+import os
+os.environ['TF_CPP_MIN_VLOG_LEVEL'] = '3'
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import numpy as np
 import tensorflow as tf
 from tqdm import tqdm	   # percentage bar for tasks
@@ -67,9 +70,6 @@ def train(train_data, total_batch_size, validation_data=None, val_batch_size=Non
 
     print('Training Completed')
 
-# tf.logging.set_verbosity(tf.logging.ERROR)
-import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 # Initialize model
 graph = tf.Graph()
 gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.9)
