@@ -193,11 +193,11 @@ class Model(object):
             self.training: training
         }
 
-    def calculate_accuracy(self, pred, label):
+    def calculate_accuracy(self, pred, labels):
         predictions = map(
             lambda x: 1 if x >= self.config.threshold else 0, pred)
         correct_prediction = tf.equal(
-            predictions, batch_labels)
+            predictions, labels)
         acc = tf.reduce_mean(
             tf.cast(correct_prediction, tf.float32))
         return self.sess.run(acc)
