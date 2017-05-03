@@ -28,9 +28,8 @@ def train(train_data, total_batch_size, validation_data=None, val_batch_size=Non
 
             train_batch_images, train_batch_labels = map(
                 list, zip(*train_batch))
-            train_batch_images = np.array(train_batch_images)
-            train_batch_images = train_batch_images.reshape(-1, config.image_size,
-                                                            config.image_size, config.channels)
+            train_batch_images = np.array(train_batch_images).reshape(-1, config.image_size,
+                                                                      config.image_size, config.channels)
             train_batch_labels = np.array(train_batch_labels).reshape(-1, 1)
 
             loss, acc = model.train_eval_batch(
@@ -57,8 +56,8 @@ def train(train_data, total_batch_size, validation_data=None, val_batch_size=Non
 
         val_images, val_labels = map(
             list, zip(*validation_data))
-        val_images = val_images.reshape(-1, config.image_size,
-                                        config.image_size, config.channels)
+        val_images = np.array(val_images).reshape(-1, config.image_size,
+                                                  config.image_size, config.channels)
         val_labels = np.array(val_labels).reshape(-1, 1)
         val_loss, val_acc = model.eval_batch(val_images, val_labels)
         print('\nEpoch: %d, Validation Loss: %f, Validation Acc: %f' %
