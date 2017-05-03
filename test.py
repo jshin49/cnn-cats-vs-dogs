@@ -26,9 +26,12 @@ model.restore()
 
 # Generate data and batches for each epoch
 train_data, validation_data, test_data = load_data()
-train_images, train_labels = map(list, zip(*train_data))
-validation_images, validation_labels = map(list, zip(*validation_data))
-test_images, test_labels = map(list, zip(*test_data))
+# train_images, train_labels = map(list, zip(*train_data))
+# test_images, test_labels = map(list, zip(*test_data))
+
+val_batches = generate_train_batches(validation_data, 100)
+val_batch = get_next_batch(val_batches)
+validation_images, validation_labels = map(list, zip(*val_batch))
 
 validation_images = np.array(validation_images)
 validation_labels = np.array(validation_labels)
