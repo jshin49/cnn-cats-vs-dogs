@@ -42,8 +42,8 @@ pred1, acc1 = model.eval_batch(train_batch_images, train_batch_labels)
 val_batches = generate_train_batches(validation_data, 100)
 val_batch = get_next_batch(val_batches)
 val_batch_images, val_batch_labels = map(list, zip(*val_batch))
-val_batch_images = np.array(validation_images)
-val_batch_labels = np.array(validation_labels)
+val_batch_images = np.array(val_batch_images)
+val_batch_labels = np.array(val_batch_labels)
 val_batch_images = val_batch_images.reshape(-1, config.image_size,
                                             config.image_size, config.channels)
 
