@@ -35,7 +35,8 @@ def train(train_data, validation_data, total_batch_size, val_batch_size):
             avg_loss += loss / total_batch_size
             avg_acc += acc / total_batch_size
 
-            if step % (total_batch_size / val_batch_size) == 0:
+            validation_check = total_batch_size / val_batch_size
+            if step % validation_check == 0 and step <= (val_batch_size * validation_check):
                 val_batch = get_next_batch(val_batches)
                 val_batch_images, val_batch_labels = map(list, zip(*val_batch))
                 val_batch_images = np.array(val_batch_images)
