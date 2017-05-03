@@ -177,7 +177,7 @@ class Model(object):
                     # self.loss = tf.losses.softmax_cross_entropy(
                     #     onehot_labels=self.labels, logits=self.model)
                     self.loss = tf.losses.log_loss(
-                        labels=self.labels, logits=self.model)
+                        labels=self.labels, predictions=self.model)
 
                     self.optimizer = tf.train.AdamOptimizer(
                         learning_rate=self.learning_rate).minimize(self.loss)
