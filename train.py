@@ -49,8 +49,8 @@ def train(train_data, total_batch_size, validation_data=None, val_batch_size=Non
         print('\nEpoch: %d, Validation Loss: %f, Validation Acc: %f' %
               (epoch + 1, val_loss, val_acc))
 
-        # print('saving checkpoint')
-        # model.save((epoch + 1) * total_batch_size)
+        print('saving checkpoint')
+        model.save((epoch + 1) * total_batch_size)
 
     print('Training Completed')
     model.writer.close()
