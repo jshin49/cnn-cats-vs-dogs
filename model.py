@@ -185,45 +185,38 @@ class Model(object):
                     self.init = tf.global_variables_initializer()
                     self.saver = tf.train.Saver(tf.trainable_variables())
 
-    def predict(self, batch_images, batch_labels):
-        self.sess.run(self.init)
-        feed_dict = {
+    def generate_feed_dict(self, batch_images, batch_labels=None, training=False):
+        return {
             self.images: batch_images,
             self.labels: batch_labels,
-            self.training: False
+            self.training: training
         }
+
+    def predict(self, batch_images, batch_labels):
+        self.sess.run(self.init)
+        feed_dict = self.generate_feed_dict(batch_images, batch_labels, False)
         pred, loss, acc = self.sess.run(
             [self.model, self.loss, self.accuracy], feed_dict=feed_dict)
         return pred, loss, acc
 
     def train_eval_batch(self, batch_images, batch_labels):
         self.sess.run(self.init)
-        feed_dict = {
-            self.images: batch_images,
-            self.labels: batch_labels,
-            self.training: True
-        }
+        feed_dict = self.generate_feed_dict(batch_images, batch_labels, True)
         loss, acc, _ = self.sess.run(
             [self.loss, self.accuracy, self.optimizer], feed_dict=feed_dict)
         return loss, acc
 
-    def eval_batch(self, batch_images, batch_labels):
+    def eval_batch(self, batch_images, batch_labels, training=False):
         self.sess.run(self.init)
-        feed_dict = {
-            self.images: batch_images,
-            self.labels: batch_labels,
-            self.training: False
-        }
+        feed_dict = self.generate_feed_dict(
+            batch_images, batch_labels, training)
         loss, acc = self.sess.run(
             [self.loss, self.accuracy], feed_dict=feed_dict)
         return loss, acc
 
     def test_batch(self, batch_images):
         self.sess.run(self.init)
-        feed_dict = {
-            self.images: batch_images,
-            self.training: False
-        }
+        feed_dict = self.generate_feed_dict(batch_images)
         pred = self.sess.run(
             [self.model], feed_dict=feed_dict)
         return pred
@@ -262,3 +255,4 @@ if __name__ == '__main__':
     # pred, loss, acc = model.predict(zeros, batch_labels)
     print(loss)
     print(pred.shape)
+    print(acc)

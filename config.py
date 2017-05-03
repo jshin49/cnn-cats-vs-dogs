@@ -7,8 +7,8 @@ class Config(object):
     instantiation.
     """
     # Hyperparameters
-    lr = 0.001  		# Learning Rate
-    l2 = 0.001          # L2 Loss Coefficient
+    lr = 0.01  		# Learning Rate
+    l2 = 0.01          # L2 Loss Coefficient
     dropout = 0.75  	# Dropout Rate
     batch_size = 32		# SGD Batch Size
     epochs = 15			# Number of Training Epochs
