@@ -65,7 +65,7 @@ def load_data():
     test_data = np.load(IMG_DIR + 'test_data' + str(IMG_SIZE) + '.npy')
     print("Shuffling and Re-splitting into train/validation data set")
     train_data, validation_data = \
-        split_dataset(train_data, validation_data, config.split_rate)
+        split_dataset(train_data, validation_data)
     return train_data, validation_data, test_data
 
 
