@@ -100,4 +100,4 @@ batch_sizes = [32]
 total_batch_size = int(config.train_size / config.batch_size)
 # val_batch_size = int(config.valid_size / config.batch_size)
 model.restore()
-train(train_data, total_batch_size, random.sample(validation_data, 500))
+train(train_data, total_batch_size, random.sample(validation_data, 100))
