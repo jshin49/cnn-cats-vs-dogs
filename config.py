@@ -7,7 +7,8 @@ class Config(object):
     instantiation.
     """
     # Hyperparameters
-    lr = 0.0001  		# Learning Rate
+    lr = 0.001  		# Learning Rate
+    l2 = 0.001          # L2 Loss Coefficient
     dropout = 0.8  		# Dropout Rate
     batch_size = 16		# SGD Batch Size
     epochs = 10			# Number of Training Epochs
@@ -22,5 +23,6 @@ class Config(object):
     train_size = 25000 - valid_size
 
     # Saver
-    model_name = 'gpu-model-{}-{}-{}'.format(lr, image_size, batch_size)
+    model_name = 'cnn-tflayers-model-l2{}-dropout{}-batch{}-lr{}-img{}'.format(
+        l2, dropout, batch_size, lr, image_size)
     ckpt_path = 'ckpt/' + model_name

@@ -26,6 +26,8 @@ class Model(object):
 
     def init_model(self, images, training):
         # CNN Model with tf.layers
+        initializer = tf.contrib.layers.xavier_initializer()
+        regularizer = tf.contrib.layers.l2_regularizer(self.config.l2)
 
         # Input Layer
         input_layer = tf.reshape(
@@ -40,12 +42,16 @@ class Model(object):
             filters=32,
             kernel_size=[3, 3],
             padding="same",
+            kernel_initializer=initializer,
+            kernel_regularizer=regularizer,
             activation=tf.nn.relu)
         conv1 = tf.layers.conv2d(
             inputs=conv1,
             filters=32,
             kernel_size=[3, 3],
             padding="same",
+            kernel_initializer=initializer,
+            kernel_regularizer=regularizer,
             activation=tf.nn.relu)
         pool1 = tf.layers.max_pooling2d(
             inputs=conv1, pool_size=[2, 2], strides=(2, 2))
@@ -56,12 +62,16 @@ class Model(object):
             filters=64,
             kernel_size=[3, 3],
             padding="same",
+            kernel_initializer=initializer,
+            kernel_regularizer=regularizer,
             activation=tf.nn.relu)
         conv2 = tf.layers.conv2d(
             inputs=conv1,
             filters=64,
             kernel_size=[3, 3],
             padding="same",
+            kernel_initializer=initializer,
+            kernel_regularizer=regularizer,
             activation=tf.nn.relu)
         pool2 = tf.layers.max_pooling2d(
             inputs=conv1, pool_size=[2, 2], strides=(2, 2))
@@ -72,12 +82,16 @@ class Model(object):
             filters=128,
             kernel_size=[3, 3],
             padding="same",
+            kernel_initializer=initializer,
+            kernel_regularizer=regularizer,
             activation=tf.nn.relu)
         conv3 = tf.layers.conv2d(
             inputs=conv1,
             filters=128,
             kernel_size=[3, 3],
             padding="same",
+            kernel_initializer=initializer,
+            kernel_regularizer=regularizer,
             activation=tf.nn.relu)
         pool3 = tf.layers.max_pooling2d(
             inputs=conv1, pool_size=[2, 2], strides=(2, 2))
@@ -88,26 +102,46 @@ class Model(object):
             filters=256,
             kernel_size=[3, 3],
             padding="same",
+            kernel_initializer=initializer,
+            kernel_regularizer=regularizer,
             activation=tf.nn.relu)
         conv4 = tf.layers.conv2d(
             inputs=conv1,
             filters=256,
             kernel_size=[3, 3],
             padding="same",
+            kernel_initializer=initializer,
+            kernel_regularizer=regularizer,
             activation=tf.nn.relu)
         pool4 = tf.layers.max_pooling2d(
             inputs=conv1, pool_size=[2, 2], strides=(2, 2))
+        # return pool4
 
         # Dense Layer
+        # Flatten for 64*64 : 32,32,32
+        # Flatten for 150*150 : 75,75,32
+        # Flatten for 224*224 : 112,112,32
         flatten = tf.reshape(pool4, [-1, 32 * 32 * 32])
         fc1 = tf.layers.dense(
-            inputs=flatten, units=256, activation=tf.nn.relu)
+            inputs=flatten,
+            units=256,
+            activation=tf.nn.relu,
+            kernel_initializer=initializer,
+            kernel_regularizer=regularizer)
         fc1 = tf.layers.dropout(
-            inputs=fc1, rate=self.config.dropout, training=training)
+            inputs=fc1,
+            rate=self.config.dropout,
+            training=training)
         fc2 = tf.layers.dense(
-            inputs=fc1, units=256, activation=tf.nn.relu)
+            inputs=fc1,
+            units=256,
+            activation=tf.nn.relu,
+            kernel_initializer=initializer,
+            kernel_regularizer=regularizer)
         fc2 = tf.layers.dropout(
-            inputs=fc2, rate=self.config.dropout, training=training)
+            inputs=fc2,
+            rate=self.config.dropout,
+            training=training)
 
         logits = tf.layers.dense(inputs=fc2, units=2)
 
@@ -115,7 +149,7 @@ class Model(object):
 
     # build the graph
     def build_graph(self):
-        with tf.device('/gpu:0'):
+        with tf.device('/cpu:0'):
             with self.graph.as_default():
                 with self.sess:
                     # Input images
@@ -135,6 +169,7 @@ class Model(object):
                     self.training = tf.placeholder(dtype=tf.bool)
 
                     self.model = self.init_model(self.images, self.training)
+                    # self.loss = tf.constant(1)
                     self.loss = tf.losses.softmax_cross_entropy(
                         onehot_labels=self.labels, logits=self.model)
 
@@ -158,6 +193,9 @@ class Model(object):
         }
         pred, loss, acc = self.sess.run(
             [self.model, self.loss, self.accuracy], feed_dict=feed_dict)
+        # pred, loss = self.sess.run(
+        #     [self.model, self.loss], feed_dict=feed_dict)
+        # return pred, loss
         return pred, loss, acc
 
     def train_eval_batch(self, batch_images, batch_labels):
@@ -205,11 +243,11 @@ class Model(object):
 
 if __name__ == '__main__':
     graph = tf.Graph()
-    sess_config = tf.ConfigProto(
-        allow_soft_placement=True, log_device_placement=True)
-    sess_config.gpu_options.allow_growth = True
-    sess = tf.Session(config=sess_config)
-    # sess = tf.Session()
+    # sess_config = tf.ConfigProto(
+    #     allow_soft_placement=True, log_device_placement=True)
+    # sess_config.gpu_options.allow_growth = True
+    # sess = tf.Session(config=sess_config)
+    sess = tf.Session()
     config = Config()
     model = Model(config, sess, graph)
 
@@ -219,8 +257,10 @@ if __name__ == '__main__':
     batch_images, batch_labels = map(list, zip(*batch))
     batch_images = np.array(batch_images)
     batch_labels = np.array(batch_labels)
-    batch_images = batch_images.reshape(-1, config.image_size, config.image_size,
-                                        config.channels)
+    batch_images = batch_images.reshape(-1, config.image_size,
+                                        config.image_size, config.channels)
     pred, loss, acc = model.predict(batch_images, batch_labels)
+    # zeros = np.zeros((16, 224, 224, 3), dtype=np.int)
+    # pred, loss = model.predict(zeros, batch_labels)
     print(loss)
     print(pred.shape)
