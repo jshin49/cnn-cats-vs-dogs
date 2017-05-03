@@ -11,7 +11,7 @@ from data_utils import load_data, generate_train_batches, get_next_batch
 
 # 0=Test, 1=Train
 K.set_learning_phase(1)
-K.set_image_dim_ordering('th')
+# K.set_image_dim_ordering('th')
 
 # Initialize model
 graph = tf.Graph()
@@ -45,8 +45,8 @@ for epoch in tqdm(range(config.epochs)):
         train_batch_images, train_batch_labels = map(list, zip(*train_batch))
         train_batch_images = np.array(train_batch_images)
         train_batch_labels = np.array(train_batch_labels)
-        train_batch_images = train_batch_images.reshape(-1, config.channels,
-                                                        config.image_size, config.image_size)
+        train_batch_images = train_batch_images.reshape(-1, config.image_size,
+                                                        config.image_size, config.channels)
 
         loss, acc = model.train_eval_batch(
             train_batch_images, train_batch_labels)
@@ -58,8 +58,8 @@ for epoch in tqdm(range(config.epochs)):
             val_batch_images, val_batch_labels = map(list, zip(*val_batch))
             val_batch_images = np.array(val_batch_images)
             val_batch_labels = np.array(val_batch_labels)
-            val_batch_images = val_batch_images.reshape(-1, config.channels,
-                                                        config.image_size, config.image_size)
+            val_batch_images = val_batch_images.reshape(-1, config.image_size,
+                                                        config.image_size, config.channels)
 
             val_loss, val_acc = model.eval_batch(
                 val_batch_images, val_batch_labels)

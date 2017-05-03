@@ -30,9 +30,9 @@ class Model(object):
 
     def init_model(self, images):
         # CNN Model
-        conv1 = Conv2D(32, (3, 3), padding='same', input_shape=(self.config.channels,
+        conv1 = Conv2D(32, (3, 3), padding='same', input_shape=(self.config.image_size,
                                                                 self.config.image_size,
-                                                                self.config.image_size),
+                                                                self.config.channels),
                        activation='relu',
                        kernel_initializer=initializers.random_normal(stddev=0.05))(images)
         conv1 = Conv2D(32, (3, 3), padding='same', activation='relu',
@@ -78,9 +78,9 @@ class Model(object):
                 with self.sess:
                     # Input images
                     self.images = tf.placeholder(shape=[None,
-                                                        self.config.channels,
                                                         self.config.image_size,
-                                                        self.config.image_size],
+                                                        self.config.image_size,
+                                                        self.config.channels],
                                                  dtype=tf.float32,
                                                  name='Images')
 
@@ -163,7 +163,7 @@ class Model(object):
 
 if __name__ == '__main__':
     K.set_learning_phase(1)
-    K.set_image_dim_ordering('th')
+    # K.set_image_dim_ordering('th')
 
     graph = tf.Graph()
     sess_config = tf.ConfigProto(
@@ -180,7 +180,7 @@ if __name__ == '__main__':
     batch_images, batch_labels = map(list, zip(*batch))
     batch_images = np.array(batch_images)
     batch_labels = np.array(batch_labels)
-    batch_images = batch_images.reshape(-1, config.channels, config.image_size,
-                                        config.image_size)
+    batch_images = batch_images.reshape(-1, config.image_size, config.image_size,
+                                        config.channels)
     pred, loss = model.predict(batch_images, batch_labels)
     print(loss)
