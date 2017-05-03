@@ -149,7 +149,7 @@ class Model(object):
 
     # build the graph
     def build_graph(self):
-        with tf.device('/cpu:0'):
+        with tf.device('/gpu:0'):
             with self.graph.as_default():
                 with self.sess:
                     # Input images
@@ -243,11 +243,11 @@ class Model(object):
 
 if __name__ == '__main__':
     graph = tf.Graph()
-    # sess_config = tf.ConfigProto(
-    #     allow_soft_placement=True, log_device_placement=True)
-    # sess_config.gpu_options.allow_growth = True
-    # sess = tf.Session(config=sess_config)
-    sess = tf.Session()
+    sess_config = tf.ConfigProto(
+        allow_soft_placement=True, log_device_placement=True)
+    sess_config.gpu_options.allow_growth = True
+    sess = tf.Session(config=sess_config)
+    # sess = tf.Session()
     config = Config()
     model = Model(config, sess, graph)
 
