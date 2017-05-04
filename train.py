@@ -20,22 +20,22 @@ def train(train_data, total_batch_size, validation_data=None, val_batch_size=Non
         avg_loss = 0
         avg_acc = 0
         train_batches = generate_train_batches(train_data, config.batch_size)
-        train_batch = get_next_batch(train_batches)
 
-        train_batch_images, train_batch_labels = map(
-            list, zip(*train_batch))
-        train_batch_images = np.array(train_batch_images).reshape(-1, config.image_size,
-                                                                  config.image_size, config.channels)
-        train_batch_labels = np.array(train_batch_labels).reshape(-1, 1)
+        # train_batch = get_next_batch(train_batches)
+        # train_batch_images, train_batch_labels = map(
+        #     list, zip(*train_batch))
+        # train_batch_images = np.array(train_batch_images).reshape(-1, config.image_size,
+        #                                                           config.image_size, config.channels)
+        # train_batch_labels = np.array(train_batch_labels).reshape(-1, 1)
 
         for step in tqdm(range(total_batch_size)):
-            # train_batch = get_next_batch(train_batches)
+            train_batch = get_next_batch(train_batches)
 
-            # train_batch_images, train_batch_labels = map(
-            #     list, zip(*train_batch))
-            # train_batch_images = np.array(train_batch_images).reshape(-1, config.image_size,
-            #                                                           config.image_size, config.channels)
-            # train_batch_labels = np.array(train_batch_labels).reshape(-1, 1)
+            train_batch_images, train_batch_labels = map(
+                list, zip(*train_batch))
+            train_batch_images = np.array(train_batch_images).reshape(-1, config.image_size,
+                                                                      config.image_size, config.channels)
+            train_batch_labels = np.array(train_batch_labels).reshape(-1, 1)
 
             summary, loss, acc = model.train_eval_batch(
                 train_batch_images, train_batch_labels, False)
