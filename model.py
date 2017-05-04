@@ -39,7 +39,7 @@ class Model(object):
         conv1 = tf.layers.conv2d(
             inputs=input_layer,
             filters=32,
-            kernel_size=[3, 3],
+            kernel_size=[5, 5],
             padding="same",
             kernel_initializer=initializer,
             kernel_regularizer=regularizer,
@@ -50,7 +50,7 @@ class Model(object):
         conv1 = tf.layers.conv2d(
             inputs=conv1,
             filters=32,
-            kernel_size=[3, 3],
+            kernel_size=[5, 5],
             padding="same",
             kernel_initializer=initializer,
             kernel_regularizer=regularizer,
@@ -65,7 +65,7 @@ class Model(object):
         conv2 = tf.layers.conv2d(
             inputs=pool1,
             filters=64,
-            kernel_size=[3, 3],
+            kernel_size=[5, 5],
             padding="same",
             kernel_initializer=initializer,
             kernel_regularizer=regularizer,
@@ -76,7 +76,7 @@ class Model(object):
         conv2 = tf.layers.conv2d(
             inputs=conv2,
             filters=64,
-            kernel_size=[3, 3],
+            kernel_size=[5, 5],
             padding="same",
             kernel_initializer=initializer,
             kernel_regularizer=regularizer,
@@ -91,7 +91,7 @@ class Model(object):
         conv3 = tf.layers.conv2d(
             inputs=pool2,
             filters=128,
-            kernel_size=[3, 3],
+            kernel_size=[5, 5],
             padding="same",
             kernel_initializer=initializer,
             kernel_regularizer=regularizer,
@@ -102,7 +102,7 @@ class Model(object):
         conv3 = tf.layers.conv2d(
             inputs=conv3,
             filters=128,
-            kernel_size=[3, 3],
+            kernel_size=[5, 5],
             padding="same",
             kernel_initializer=initializer,
             kernel_regularizer=regularizer,
@@ -117,7 +117,7 @@ class Model(object):
         conv4 = tf.layers.conv2d(
             inputs=pool3,
             filters=256,
-            kernel_size=[3, 3],
+            kernel_size=[5, 5],
             padding="same",
             kernel_initializer=initializer,
             kernel_regularizer=regularizer,
@@ -128,7 +128,7 @@ class Model(object):
         conv4 = tf.layers.conv2d(
             inputs=conv4,
             filters=256,
-            kernel_size=[3, 3],
+            kernel_size=[5, 5],
             padding="same",
             kernel_initializer=initializer,
             kernel_regularizer=regularizer,
@@ -138,7 +138,7 @@ class Model(object):
             activation=tf.nn.relu)
         pool4 = tf.layers.max_pooling2d(
             inputs=conv4, pool_size=[2, 2], strides=(2, 2))
-        # return pool2
+        # return pool4
 
         # Dense Layer
         # Flatten for 64*64 : 4,4,256
@@ -176,7 +176,7 @@ class Model(object):
             training=training)
 
         # One output: Confidence score of being a dog
-        logits = tf.layers.dense(inputs=fc2, units=1, activation=tf.nn.sigmoid)
+        logits = tf.layers.dense(inputs=fc2, units=1)
 
         return logits
 
