@@ -3,6 +3,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 
+import random
 from config import Config
 import data_utils as du
 
@@ -284,6 +285,8 @@ if __name__ == '__main__':
     #     (16, config.image_size, config.image_size, 3), dtype=np.int)
     # pred, loss, acc = model.predict(zeros, batch_labels)
     # print(pred, batch_labels)
+    loss, acc = model.eval_batch(np.reshape(
+        mnist.test.images, [-1, 28, 28, 1]), mnist.test.labels)
     print(pred.shape)
     print(loss)
     print(acc)
