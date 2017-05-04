@@ -13,7 +13,7 @@ from config import Config
 from data_utils import load_data, generate_train_batches, get_next_batch
 
 
-def train(train_data, total_batch_size, validation_data=None, val_batch_size=None):
+def train(train_data, total_batch_size, validation_data=None):
     model.sess.run(model.init)
 
     for epoch in tqdm(range(config.epochs)):

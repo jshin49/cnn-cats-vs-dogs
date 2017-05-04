@@ -238,7 +238,6 @@ class Model(object):
         return summary, loss, acc
 
     def eval_batch(self, batch_images, batch_labels, training=False):
-        self.sess.run(self.init)
         feed_dict = self.generate_feed_dict(
             batch_images, batch_labels, training)
         loss, acc = self.sess.run(

@@ -39,13 +39,13 @@ def label_img(img):
         return 1
 
 
-def create_train_data():
+def create_train_data(size=IMG_SIZE):
     train_data = []
     for img in tqdm(os.listdir(TRAIN_DIR)):
         label = label_img(img)
         path = os.path.join(TRAIN_DIR, img)
         img = cv2.imread(path, cv2.IMREAD_COLOR)
-        img = cv2.resize(img, (IMG_SIZE, IMG_SIZE))
+        img = cv2.resize(img, (size, size))
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         # image normalization
         # mean_pixel = [103.939, 116.779, 123.68]
@@ -68,7 +68,7 @@ def process_test_data(size=IMG_SIZE):
         path = os.path.join(TEST_DIR, img)
         img_num = img.split('.')[0]
         img = cv2.imread(path, cv2.IMREAD_COLOR)
-        img = cv2.resize(img, (IMG_SIZE, IMG_SIZE))
+        img = cv2.resize(img, (size, size))
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         # img = img.transpose((2, 0, 1))
         test_data.append([np.array(img), img_num])
@@ -90,7 +90,7 @@ def process_data(size):
             du.split_dataset(train_data, validation_data)
     else:
         print("Creating training data")
-        train_data = create_train_data()
+        train_data = create_train_data(size)
         print("Splitting into train/validation data set")
         train_data, validation_data = \
             du.split_dataset(train_data, None, size)

@@ -75,12 +75,18 @@ if __name__ == '__main__':
     for size in [64, 150, 224]:
         train_data, validation_data, test_data = iu.process_data(size)
 
-    train_batches = generate_train_batches(train_data, 12)
+    train_batches = generate_train_batches(train_data, config.batch_size)
     print(len(train_batches))
+    total_batch_size = config.train_size / config.batch_size
     print(train_batches[0][0][0].shape)
     val_batches = generate_train_batches(
         validation_data, config.batch_size)
     print(len(val_batches))
+
+    for step in tqdm(range(total_batch_size)):
+        get_next_batch(train_batches)
+    # for step in tqdm(range(len(train_batches))):
+    #     get_next_batch(train_batches)
 
     # b1 = len(train_batches)
     # b2 = len(val_batches)
