@@ -124,13 +124,6 @@ class Model(object):
         # Flatten for 224*224 : 14,14,256
         # flatten = tf.reshape(pool4, [-1, 14 * 14 * 256])
         # Dense Layer
-
-        # Flatten for 64*64 : 16,16,64
-        # flatten = tf.reshape(pool2, [-1, 16 * 16 * 64])
-        # Flatten for 150*150 : 37,37,64
-        # flatten = tf.reshape(pool4, [-1, 37 * 37 * 64])
-        # Flatten for 224*224 : 56,56,64
-        # flatten = tf.reshape(pool4, [-1, 56 * 56 * 64])
         fc1 = tf.layers.dense(
             inputs=flatten,
             units=256,
@@ -141,19 +134,19 @@ class Model(object):
             inputs=fc1,
             rate=self.config.dropout,
             training=training)
-        # fc2 = tf.layers.dense(
-        #     inputs=fc1,
-        #     units=256,
-        #     activation=tf.nn.relu,
-        #     kernel_initializer=initializer,
-        #     kernel_regularizer=regularizer)
-        # fc2 = tf.layers.dropout(
-        #     inputs=fc2,
-        #     rate=self.config.dropout,
-        #     training=training)
+        fc2 = tf.layers.dense(
+            inputs=fc1,
+            units=256,
+            activation=tf.nn.relu,
+            kernel_initializer=initializer,
+            kernel_regularizer=regularizer)
+        fc2 = tf.layers.dropout(
+            inputs=fc2,
+            rate=self.config.dropout,
+            training=training)
 
         # One output: Confidence score of being a dog
-        logits = tf.layers.dense(inputs=fc1, units=1, activation=tf.nn.sigmoid)
+        logits = tf.layers.dense(inputs=fc2, units=1, activation=tf.nn.sigmoid)
 
         return logits
 

@@ -31,7 +31,7 @@ def train(train_data, total_batch_size, validation_data=None):
             train_batch_labels = np.array(train_batch_labels).reshape(-1, 1)
 
             summary, loss, acc = model.train_eval_batch(
-                train_batch_images, train_batch_labels, False)
+                train_batch_images, train_batch_labels, True)
             avg_loss += (loss / total_batch_size)
             avg_acc += (acc / total_batch_size)
             model.writer.add_summary(
