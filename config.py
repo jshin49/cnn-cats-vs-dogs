@@ -10,7 +10,7 @@ class Config(object):
     lr = 0.001  		# Learning Rate
     l2 = 0.0001         # L2 Loss Coefficient
     dropout = 0.5     	# Dropout Rate
-    batch_size = 32		# SGD Batch Size
+    batch_size = 16		# SGD Batch Size
     epochs = 15			# Number of Training Epochs
     threshold = 0.5     # Threshold for classification
 
@@ -20,8 +20,8 @@ class Config(object):
     image_dir = './arrays/'
     image_size = 64     # resize image to image_size*image_size
     channels = 3        # Channel Size
-    valid_size = 100
-    train_size = 2500
+    valid_size = 1000
+    train_size = 24000
 
     # Saver
     model_name = 'cnn-tflayers-model-l2{}-dropout{}-batch{}-lr{}-img{}'.format(

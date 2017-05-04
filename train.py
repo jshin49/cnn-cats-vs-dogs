@@ -14,9 +14,8 @@ from data_utils import load_data, generate_train_batches, get_next_batch
 
 
 def train(train_data, total_batch_size, validation_data=None, val_batch_size=None):
-    # train_writer = tf.summary.FileWriter(
-    #     model.log_path, model.sess.graph)
     model.sess.run(model.init)
+
     for epoch in tqdm(range(config.epochs)):
         avg_loss = 0
         avg_acc = 0
@@ -118,5 +117,6 @@ batch_sizes = [16, 32, 64, 100, 128]
 total_batch_size = int(config.train_size / config.batch_size)
 # val_batch_size = int(config.valid_size / config.batch_size)
 model.restore()
-train(random.sample(train_data, model.config.train_size), total_batch_size,
-      random.sample(validation_data, model.config.valid_size))
+train(test_data, total_batch_size, validation_data)
+# train(random.sample(train_data, model.config.train_size), total_batch_size,
+# random.sample(validation_data, model.config.valid_size))

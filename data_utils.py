@@ -29,8 +29,8 @@ def split_dataset(train_data, validation_data, size=IMG_SIZE):
 
     np.random.shuffle(data)
     print(data.shape)
-    train_data = data[:-1000]
-    validation_data = data[-1000:]
+    train_data = data[:-config.valid_size]
+    validation_data = data[-config.valid_size:]
 
     print(train_data.shape)
     print(validation_data.shape)
