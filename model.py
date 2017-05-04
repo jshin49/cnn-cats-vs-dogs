@@ -75,54 +75,62 @@ class Model(object):
         pool2 = tf.layers.max_pooling2d(
             inputs=conv2, pool_size=[2, 2], strides=(2, 2))
 
-        # Convolutional Layer #3
-        conv3 = tf.layers.conv2d(
-            inputs=pool2,
-            filters=128,
-            kernel_size=[3, 3],
-            padding="same",
-            kernel_initializer=initializer,
-            kernel_regularizer=regularizer,
-            activation=tf.nn.relu)
-        conv3 = tf.layers.conv2d(
-            inputs=conv3,
-            filters=128,
-            kernel_size=[3, 3],
-            padding="same",
-            kernel_initializer=initializer,
-            kernel_regularizer=regularizer,
-            activation=tf.nn.relu)
-        pool3 = tf.layers.max_pooling2d(
-            inputs=conv3, pool_size=[2, 2], strides=(2, 2))
+        # # Convolutional Layer #3
+        # conv3 = tf.layers.conv2d(
+        #     inputs=pool2,
+        #     filters=128,
+        #     kernel_size=[3, 3],
+        #     padding="same",
+        #     kernel_initializer=initializer,
+        #     kernel_regularizer=regularizer,
+        #     activation=tf.nn.relu)
+        # conv3 = tf.layers.conv2d(
+        #     inputs=conv3,
+        #     filters=128,
+        #     kernel_size=[3, 3],
+        #     padding="same",
+        #     kernel_initializer=initializer,
+        #     kernel_regularizer=regularizer,
+        #     activation=tf.nn.relu)
+        # pool3 = tf.layers.max_pooling2d(
+        #     inputs=conv3, pool_size=[2, 2], strides=(2, 2))
 
-        # Convolutional Layer #4
-        conv4 = tf.layers.conv2d(
-            inputs=pool3,
-            filters=256,
-            kernel_size=[3, 3],
-            padding="same",
-            kernel_initializer=initializer,
-            kernel_regularizer=regularizer,
-            activation=tf.nn.relu)
-        conv4 = tf.layers.conv2d(
-            inputs=conv4,
-            filters=256,
-            kernel_size=[3, 3],
-            padding="same",
-            kernel_initializer=initializer,
-            kernel_regularizer=regularizer,
-            activation=tf.nn.relu)
-        pool4 = tf.layers.max_pooling2d(
-            inputs=conv4, pool_size=[2, 2], strides=(2, 2))
-        # return pool4
+        # # Convolutional Layer #4
+        # conv4 = tf.layers.conv2d(
+        #     inputs=pool3,
+        #     filters=256,
+        #     kernel_size=[3, 3],
+        #     padding="same",
+        #     kernel_initializer=initializer,
+        #     kernel_regularizer=regularizer,
+        #     activation=tf.nn.relu)
+        # conv4 = tf.layers.conv2d(
+        #     inputs=conv4,
+        #     filters=256,
+        #     kernel_size=[3, 3],
+        #     padding="same",
+        #     kernel_initializer=initializer,
+        #     kernel_regularizer=regularizer,
+        #     activation=tf.nn.relu)
+        # pool4 = tf.layers.max_pooling2d(
+        #     inputs=conv4, pool_size=[2, 2], strides=(2, 2))
+        # return pool2
 
         # Dense Layer
         # Flatten for 64*64 : 4,4,256
-        flatten = tf.reshape(pool4, [-1, 4 * 4 * 256])
+        # flatten = tf.reshape(pool2, [-1, 4 * 4 * 64])
         # Flatten for 150*150 : 9,9,256
         # flatten = tf.reshape(pool4, [-1, 9 * 9 * 256])
         # Flatten for 224*224 : 14,14,256
         # flatten = tf.reshape(pool4, [-1, 14 * 14 * 256])
+        # Dense Layer
+
+        # Flatten for 64*64 : 16,16,256
+        flatten = tf.reshape(pool2, [-1, 16 * 16 * 64])
+        # Flatten for 150*150 : 37,37,256
+        # flatten = tf.reshape(pool4, [-1, 37 * 37 * 64])
+        # Flatten for 224*224 : 56,56,256
+        # flatten = tf.reshape(pool4, [-1, 56 * 56 * 64])
         fc1 = tf.layers.dense(
             inputs=flatten,
             units=256,
@@ -133,19 +141,19 @@ class Model(object):
             inputs=fc1,
             rate=self.config.dropout,
             training=training)
-        fc2 = tf.layers.dense(
-            inputs=fc1,
-            units=256,
-            activation=tf.nn.relu,
-            kernel_initializer=initializer,
-            kernel_regularizer=regularizer)
-        fc2 = tf.layers.dropout(
-            inputs=fc2,
-            rate=self.config.dropout,
-            training=training)
+        # fc2 = tf.layers.dense(
+        #     inputs=fc1,
+        #     units=256,
+        #     activation=tf.nn.relu,
+        #     kernel_initializer=initializer,
+        #     kernel_regularizer=regularizer)
+        # fc2 = tf.layers.dropout(
+        #     inputs=fc2,
+        #     rate=self.config.dropout,
+        #     training=training)
 
         # One output: Confidence score of being a dog
-        logits = tf.layers.dense(inputs=fc2, units=1, activation=tf.nn.sigmoid)
+        logits = tf.layers.dense(inputs=fc1, units=1, activation=tf.nn.sigmoid)
 
         return logits
 
@@ -181,6 +189,8 @@ class Model(object):
                         tf.cast(correct_prediction, tf.float32))
                     self.loss = tf.losses.log_loss(
                         labels=self.labels, predictions=self.model)
+                    # self.accuracy = tf.constant(1)
+                    # self.loss = tf.constant(1)
                     self.optimizer = tf.train.AdamOptimizer(
                         learning_rate=self.learning_rate).minimize(self.loss)
 
@@ -275,8 +285,10 @@ if __name__ == '__main__':
     batch_images = batch_images.reshape(-1, config.image_size,
                                         config.image_size, config.channels)
     pred, loss, acc = model.predict(batch_images, batch_labels)
-    # zeros = np.zeros((16, 224, 224, 3), dtype=np.int)
+    # zeros = np.zeros(
+    #     (16, config.image_size, config.image_size, 3), dtype=np.int)
     # pred, loss, acc = model.predict(zeros, batch_labels)
     print(pred, batch_labels)
+    print(pred.shape)
     print(loss)
     print(acc)
