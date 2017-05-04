@@ -24,6 +24,6 @@ class Config(object):
     train_size = 24000
 
     # Saver
-    model_name = 'cnn-tflayers-model-l2{}-dropout{}-batch{}-lr{}-img{}'.format(
-        l2, dropout, batch_size, lr, image_size)
+    model_name = 'model-lr{}-img{}'.format(
+        lr, image_size)
     ckpt_path = 'ckpt/' + model_name
