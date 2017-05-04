@@ -31,7 +31,7 @@ def train(train_data, total_batch_size, validation_data=None):
             train_batch_labels = np.array(train_batch_labels).reshape(-1, 1)
 
             summary, loss, acc = model.train_eval_batch(
-                train_batch_images, train_batch_labels, True)
+                train_batch_images, train_batch_labels, False)
             avg_loss += (loss / total_batch_size)
             avg_acc += (acc / total_batch_size)
             model.writer.add_summary(
@@ -73,7 +73,7 @@ train_data, validation_data, test_data = load_data()
 # Hyperparameter Tuning (Choose Best)
 image_sizes = [64, 150, 224]
 thresholds = [0.5, 0.6, 0.7, 0.8, 0.9]
-l2s = [0.1, 0.01, 0.001]
+l2s = [0.1, 0.01, 0.001, 0.0001, 0.00001]
 lrs = [0.1, 0.05, 0.01, 0.005, 0.001, 0.0005, 0.0001, 0.00005, 0.00001]
 dropouts = [0.5, 0.75, 1.0]
 batch_sizes = [16, 32, 64, 100, 128]
@@ -84,14 +84,14 @@ batch_sizes = [16, 32, 64, 100, 128]
 # for threshold in thresholds:
 #     pass
 
-# for lr in lrs:
-#     config.lr = lr
-#     model.restore()
-#     # print('L2: %f, Dropout: %f, Batch Size: %d, Learning Rate: %f \n' %
-#     #       (config.l2, config.dropout, config.batch_size, config.lr))
-#     print('Learning Rate: %f' % (lr))
-#     total_batch_size = int(config.train_size / config.batch_size)
-#     train(train_data, total_batch_size, validation_data)
+for lr in lrs:
+    config.lr = lr
+    model.restore()
+    # print('L2: %f, Dropout: %f, Batch Size: %d, Learning Rate: %f \n' %
+    #       (config.l2, config.dropout, config.batch_size, config.lr))
+    print('Learning Rate: %f' % (lr))
+    total_batch_size = int(config.train_size / config.batch_size)
+    train(train_data, total_batch_size, validation_data)
 
 
 # for batch_size in batch_sizes:
