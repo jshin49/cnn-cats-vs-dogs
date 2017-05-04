@@ -16,6 +16,7 @@ from data_utils import load_data, generate_train_batches, get_next_batch
 def train(train_data, total_batch_size, validation_data=None, val_batch_size=None):
     # train_writer = tf.summary.FileWriter(
     #     model.log_path, model.sess.graph)
+    model.sess.run(self.init)
     for epoch in tqdm(range(config.epochs)):
         avg_loss = 0
         avg_acc = 0
@@ -87,15 +88,15 @@ batch_sizes = [16, 32, 64, 100, 128]
 #         for batch_size in batch_sizes:
 #             config.batch_size = batch_size
 #             total_batch_size = int(config.train_size / config.batch_size)
-for lr in lrs:
-    config.lr = lr
-    model.restore()
-    # print('L2: %f, Dropout: %f, Batch Size: %d, Learning Rate: %f \n' %
-    #       (config.l2, config.dropout, config.batch_size, config.lr))
-    print('Learning Rate: %f' % (lr))
-    total_batch_size = int(config.train_size / config.batch_size)
-    train(random.sample(train_data, model.config.train_size), total_batch_size,
-          random.sample(validation_data, model.config.valid_size))
+# for lr in lrs:
+#     config.lr = lr
+#     model.restore()
+#     # print('L2: %f, Dropout: %f, Batch Size: %d, Learning Rate: %f \n' %
+#     #       (config.l2, config.dropout, config.batch_size, config.lr))
+#     print('Learning Rate: %f' % (lr))
+#     total_batch_size = int(config.train_size / config.batch_size)
+#     train(random.sample(train_data, model.config.train_size), total_batch_size,
+#           random.sample(validation_data, model.config.valid_size))
 
 # for batch_size in batch_sizes:
 #     config.batch_size = batch_size
@@ -114,8 +115,8 @@ for lr in lrs:
 #           random.sample(validation_data, model.config.valid_size))
 
 
-# total_batch_size = int(config.train_size / config.batch_size)
+total_batch_size = int(config.train_size / config.batch_size)
 # val_batch_size = int(config.valid_size / config.batch_size)
-# model.restore()
-# train(random.sample(train_data, model.config.train_size), total_batch_size,
-#       random.sample(validation_data, model.config.valid_size))
+model.restore()
+train(random.sample(train_data, model.config.train_size), total_batch_size,
+      random.sample(validation_data, model.config.valid_size))

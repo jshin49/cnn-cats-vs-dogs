@@ -75,61 +75,61 @@ class Model(object):
         pool2 = tf.layers.max_pooling2d(
             inputs=conv2, pool_size=[2, 2], strides=(2, 2))
 
-        # # Convolutional Layer #3
-        # conv3 = tf.layers.conv2d(
-        #     inputs=pool2,
-        #     filters=128,
-        #     kernel_size=[3, 3],
-        #     padding="same",
-        #     kernel_initializer=initializer,
-        #     kernel_regularizer=regularizer,
-        #     activation=tf.nn.relu)
-        # conv3 = tf.layers.conv2d(
-        #     inputs=conv3,
-        #     filters=128,
-        #     kernel_size=[3, 3],
-        #     padding="same",
-        #     kernel_initializer=initializer,
-        #     kernel_regularizer=regularizer,
-        #     activation=tf.nn.relu)
-        # pool3 = tf.layers.max_pooling2d(
-        #     inputs=conv3, pool_size=[2, 2], strides=(2, 2))
+        # Convolutional Layer #3
+        conv3 = tf.layers.conv2d(
+            inputs=pool2,
+            filters=128,
+            kernel_size=[3, 3],
+            padding="same",
+            kernel_initializer=initializer,
+            kernel_regularizer=regularizer,
+            activation=tf.nn.relu)
+        conv3 = tf.layers.conv2d(
+            inputs=conv3,
+            filters=128,
+            kernel_size=[3, 3],
+            padding="same",
+            kernel_initializer=initializer,
+            kernel_regularizer=regularizer,
+            activation=tf.nn.relu)
+        pool3 = tf.layers.max_pooling2d(
+            inputs=conv3, pool_size=[2, 2], strides=(2, 2))
 
-        # # Convolutional Layer #4
-        # conv4 = tf.layers.conv2d(
-        #     inputs=pool3,
-        #     filters=256,
-        #     kernel_size=[3, 3],
-        #     padding="same",
-        #     kernel_initializer=initializer,
-        #     kernel_regularizer=regularizer,
-        #     activation=tf.nn.relu)
-        # conv4 = tf.layers.conv2d(
-        #     inputs=conv4,
-        #     filters=256,
-        #     kernel_size=[3, 3],
-        #     padding="same",
-        #     kernel_initializer=initializer,
-        #     kernel_regularizer=regularizer,
-        #     activation=tf.nn.relu)
-        # pool4 = tf.layers.max_pooling2d(
-        #     inputs=conv4, pool_size=[2, 2], strides=(2, 2))
+        # Convolutional Layer #4
+        conv4 = tf.layers.conv2d(
+            inputs=pool3,
+            filters=256,
+            kernel_size=[3, 3],
+            padding="same",
+            kernel_initializer=initializer,
+            kernel_regularizer=regularizer,
+            activation=tf.nn.relu)
+        conv4 = tf.layers.conv2d(
+            inputs=conv4,
+            filters=256,
+            kernel_size=[3, 3],
+            padding="same",
+            kernel_initializer=initializer,
+            kernel_regularizer=regularizer,
+            activation=tf.nn.relu)
+        pool4 = tf.layers.max_pooling2d(
+            inputs=conv4, pool_size=[2, 2], strides=(2, 2))
         # return pool2
 
         # Dense Layer
         # Flatten for 64*64 : 4,4,256
-        # flatten = tf.reshape(pool2, [-1, 4 * 4 * 64])
+        flatten = tf.reshape(pool4, [-1, 4 * 4 * 256])
         # Flatten for 150*150 : 9,9,256
         # flatten = tf.reshape(pool4, [-1, 9 * 9 * 256])
         # Flatten for 224*224 : 14,14,256
         # flatten = tf.reshape(pool4, [-1, 14 * 14 * 256])
         # Dense Layer
 
-        # Flatten for 64*64 : 16,16,256
-        flatten = tf.reshape(pool2, [-1, 16 * 16 * 64])
-        # Flatten for 150*150 : 37,37,256
+        # Flatten for 64*64 : 16,16,64
+        # flatten = tf.reshape(pool2, [-1, 16 * 16 * 64])
+        # Flatten for 150*150 : 37,37,64
         # flatten = tf.reshape(pool4, [-1, 37 * 37 * 64])
-        # Flatten for 224*224 : 56,56,256
+        # Flatten for 224*224 : 56,56,64
         # flatten = tf.reshape(pool4, [-1, 56 * 56 * 64])
         fc1 = tf.layers.dense(
             inputs=flatten,
@@ -230,7 +230,6 @@ class Model(object):
         return pred, loss, acc
 
     def train_eval_batch(self, batch_images, batch_labels, training=True):
-        self.sess.run(self.init)
         feed_dict = self.generate_feed_dict(
             batch_images, batch_labels, training)
         summary, loss, acc, _ = self.sess.run(
