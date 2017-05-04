@@ -33,11 +33,9 @@ def train(train_data, total_batch_size, validation_data=None):
         print('\nEpoch: %d, Avg Loss: %f, Train Acc: %f' %
               (epoch + 1, avg_loss, avg_acc))
 
-        val_images, val_labels = map(
-            list, zip(*random.sample(validation_data, 100)))
+        val_images, val_labels = random.sample(validation_data, 100)
         val_images = np.array(val_images).reshape(-1, config.image_size,
                                                   config.image_size, config.channels)
-        val_labels = np.array(val_labels).reshape(-1, 1)
         val_loss, val_acc = model.eval_batch(val_images, val_labels)
         print('\nEpoch: %d, Validation Loss: %f, Validation Acc: %f' %
               (epoch + 1, val_loss, val_acc))
