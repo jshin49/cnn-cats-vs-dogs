@@ -48,10 +48,10 @@ def create_train_data(size=IMG_SIZE):
         img = cv2.resize(img, (size, size))
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         # image normalization
-        # mean_pixel = [103.939, 116.779, 123.68]
-        # img = img.astype(np.float32, copy=False)
-        # for c in range(3):
-        #     img[:, :, c] = img[:, :, c] - mean_pixel[c]
+        mean_pixel = [103.939, 116.779, 123.68]
+        img = img.astype(np.float32, copy=False)
+        for c in range(3):
+            img[:, :, c] = img[:, :, c] - mean_pixel[c]
         # img = img.transpose((2, 0, 1))
         # img = np.expand_dims(img, axis=0)
 

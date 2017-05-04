@@ -43,6 +43,9 @@ class Model(object):
             padding="same",
             kernel_initializer=initializer,
             kernel_regularizer=regularizer,
+            use_bias=True,
+            bias_initializer=initializer,
+            bias_regularizer=regularizer,
             activation=tf.nn.relu)
         conv1 = tf.layers.conv2d(
             inputs=conv1,
@@ -51,6 +54,9 @@ class Model(object):
             padding="same",
             kernel_initializer=initializer,
             kernel_regularizer=regularizer,
+            use_bias=True,
+            bias_initializer=initializer,
+            bias_regularizer=regularizer,
             activation=tf.nn.relu)
         pool1 = tf.layers.max_pooling2d(
             inputs=conv1, pool_size=[2, 2], strides=(2, 2))
@@ -63,6 +69,9 @@ class Model(object):
             padding="same",
             kernel_initializer=initializer,
             kernel_regularizer=regularizer,
+            use_bias=True,
+            bias_initializer=initializer,
+            bias_regularizer=regularizer,
             activation=tf.nn.relu)
         conv2 = tf.layers.conv2d(
             inputs=conv2,
@@ -71,6 +80,9 @@ class Model(object):
             padding="same",
             kernel_initializer=initializer,
             kernel_regularizer=regularizer,
+            use_bias=True,
+            bias_initializer=initializer,
+            bias_regularizer=regularizer,
             activation=tf.nn.relu)
         pool2 = tf.layers.max_pooling2d(
             inputs=conv2, pool_size=[2, 2], strides=(2, 2))
@@ -83,6 +95,9 @@ class Model(object):
             padding="same",
             kernel_initializer=initializer,
             kernel_regularizer=regularizer,
+            use_bias=True,
+            bias_initializer=initializer,
+            bias_regularizer=regularizer,
             activation=tf.nn.relu)
         conv3 = tf.layers.conv2d(
             inputs=conv3,
@@ -91,6 +106,9 @@ class Model(object):
             padding="same",
             kernel_initializer=initializer,
             kernel_regularizer=regularizer,
+            use_bias=True,
+            bias_initializer=initializer,
+            bias_regularizer=regularizer,
             activation=tf.nn.relu)
         pool3 = tf.layers.max_pooling2d(
             inputs=conv3, pool_size=[2, 2], strides=(2, 2))
@@ -103,6 +121,9 @@ class Model(object):
             padding="same",
             kernel_initializer=initializer,
             kernel_regularizer=regularizer,
+            use_bias=True,
+            bias_initializer=initializer,
+            bias_regularizer=regularizer,
             activation=tf.nn.relu)
         conv4 = tf.layers.conv2d(
             inputs=conv4,
@@ -111,6 +132,9 @@ class Model(object):
             padding="same",
             kernel_initializer=initializer,
             kernel_regularizer=regularizer,
+            use_bias=True,
+            bias_initializer=initializer,
+            bias_regularizer=regularizer,
             activation=tf.nn.relu)
         pool4 = tf.layers.max_pooling2d(
             inputs=conv4, pool_size=[2, 2], strides=(2, 2))
@@ -129,7 +153,10 @@ class Model(object):
             units=256,
             activation=tf.nn.relu,
             kernel_initializer=initializer,
-            kernel_regularizer=regularizer)
+            kernel_regularizer=regularizer,
+            use_bias=True,
+            bias_initializer=initializer,
+            bias_regularizer=regularizer)
         fc1 = tf.layers.dropout(
             inputs=fc1,
             rate=self.config.dropout,
@@ -139,7 +166,10 @@ class Model(object):
             units=256,
             activation=tf.nn.relu,
             kernel_initializer=initializer,
-            kernel_regularizer=regularizer)
+            kernel_regularizer=regularizer,
+            use_bias=True,
+            bias_initializer=initializer,
+            bias_regularizer=regularizer)
         fc2 = tf.layers.dropout(
             inputs=fc2,
             rate=self.config.dropout,
