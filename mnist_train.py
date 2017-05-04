@@ -37,6 +37,7 @@ def train(train_data, total_batch_size, validation_data=None):
     print('Testing')
     loss, acc = model.eval_batch(np.reshape(
         validation_data.images, [-1, 28, 28, 1]), validation_data.labels)
+    print('\n Avg Loss: %f, Train Acc: %f' % (loss, acc))
 
 
 # Initialize model
