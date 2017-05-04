@@ -212,7 +212,7 @@ class Model(object):
                         tf.cast(correct_prediction, tf.float32))
                     # self.loss = tf.losses.log_loss(
                     #     labels=self.labels, predictions=self.model)
-                    self.loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy(
+                    self.loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(
                         labels=self.labels, logits=self.model))
                     # self.accuracy = tf.constant(1)
                     # self.loss = tf.constant(1)
