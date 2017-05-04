@@ -216,7 +216,7 @@ class Model(object):
                         labels=self.labels, logits=self.model))
                     # self.accuracy = tf.constant(1)
                     # self.loss = tf.constant(1)
-                    self.optimizer = tf.train.AdamOptimizer(
+                    self.optimizer = tf.train.RMSPropOptimizer(
                         learning_rate=self.learning_rate).minimize(self.loss)
 
                     # TensorBoard Summary
@@ -259,7 +259,6 @@ class Model(object):
             batch_images, batch_labels, training)
         summary, loss, acc, _ = self.sess.run(
             [self.summary, self.loss, self.accuracy, self.optimizer], feed_dict=feed_dict)
-
         return summary, loss, acc
 
     def eval_batch(self, batch_images, batch_labels, training=False):
