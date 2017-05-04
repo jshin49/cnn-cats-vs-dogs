@@ -41,7 +41,7 @@ def train(train_data, total_batch_size, validation_data=None):
               (epoch + 1, avg_loss, avg_acc))
 
         val_images, val_labels = map(
-            list, zip(*validation_data))
+            list, zip(*random.sample(validation_data, 100)))
         val_images = np.array(val_images).reshape(-1, config.image_size,
                                                   config.image_size, config.channels)
         val_labels = np.array(val_labels).reshape(-1, 1)
@@ -91,8 +91,8 @@ batch_sizes = [16, 32, 64, 100, 128]
 #     #       (config.l2, config.dropout, config.batch_size, config.lr))
 #     print('Learning Rate: %f' % (lr))
 #     total_batch_size = int(config.train_size / config.batch_size)
-#     train(random.sample(train_data, model.config.train_size), total_batch_size,
-#           random.sample(validation_data, model.config.valid_size))
+#     train(train_data, total_batch_size, validation_data)
+
 
 # for batch_size in batch_sizes:
 #     config.batch_size = batch_size
@@ -112,8 +112,5 @@ batch_sizes = [16, 32, 64, 100, 128]
 
 
 total_batch_size = int(config.train_size / config.batch_size)
-# val_batch_size = int(config.valid_size / config.batch_size)
 model.restore()
 train(train_data, total_batch_size, validation_data)
-# train(random.sample(train_data, model.config.train_size), total_batch_size,
-# random.sample(validation_data, model.config.valid_size))
