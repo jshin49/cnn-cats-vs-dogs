@@ -1,3 +1,4 @@
+MNIST_data/
 *.npy
 *.pyc
 data/
