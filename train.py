@@ -16,7 +16,7 @@ from data_utils import load_data, generate_train_batches, get_next_batch
 def train(train_data, total_batch_size, validation_data=None, val_batch_size=None):
     # train_writer = tf.summary.FileWriter(
     #     model.log_path, model.sess.graph)
-    model.sess.run(self.init)
+    model.sess.run(model.init)
     for epoch in tqdm(range(config.epochs)):
         avg_loss = 0
         avg_acc = 0
