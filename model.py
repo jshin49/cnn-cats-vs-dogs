@@ -210,8 +210,10 @@ class Model(object):
                         self.predictions, tf.cast(self.labels, tf.bool))
                     self.accuracy = tf.reduce_mean(
                         tf.cast(correct_prediction, tf.float32))
-                    self.loss = tf.losses.log_loss(
-                        labels=self.labels, predictions=self.model)
+                    # self.loss = tf.losses.log_loss(
+                    #     labels=self.labels, predictions=self.model)
+                    self.loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy(
+                        labels=self.labels, logits=self.model))
                     # self.accuracy = tf.constant(1)
                     # self.loss = tf.constant(1)
                     self.optimizer = tf.train.AdamOptimizer(
