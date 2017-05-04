@@ -77,16 +77,13 @@ l2s = [0.1, 0.01, 0.001]
 lrs = [0.1, 0.05, 0.01, 0.005, 0.001, 0.0005, 0.0001, 0.00005, 0.00001]
 dropouts = [0.5, 0.75, 1.0]
 batch_sizes = [16, 32, 64, 100, 128]
-# for image_size in image_sizes:
-#     for threshold in thresholds:
-#         pass
-# for l2 in l2s:
-#     config.l2 = l2
-#     for dropout in dropouts:
-#         config.dropout = dropout
-#         for batch_size in batch_sizes:
-#             config.batch_size = batch_size
-#             total_batch_size = int(config.train_size / config.batch_size)
+
+# for dropout in dropouts:
+#     pass
+
+# for threshold in thresholds:
+#     pass
+
 # for lr in lrs:
 #     config.lr = lr
 #     model.restore()
@@ -117,6 +114,6 @@ batch_sizes = [16, 32, 64, 100, 128]
 total_batch_size = int(config.train_size / config.batch_size)
 # val_batch_size = int(config.valid_size / config.batch_size)
 model.restore()
-train(test_data, total_batch_size, validation_data)
+train(train_data, total_batch_size, validation_data)
 # train(random.sample(train_data, model.config.train_size), total_batch_size,
 # random.sample(validation_data, model.config.valid_size))
